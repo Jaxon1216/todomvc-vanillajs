@@ -41,11 +41,12 @@
 - `app.js`
 
 ### 1.2 编写 HTML 基础结构
-
-打开 `index.html`，**逐行手动输入**以下代码：
+打开效果图观察一下，
+打开你的`index.html`，**参考**以下代码：
 
 > 💡 **新手提示**：不要直接复制粘贴！手动敲代码能帮助你更好地理解每一行的作用，也更容易发现和记住语法细节。
-
+- 先总体后局部
+- 多思考
 ```html
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -456,7 +457,7 @@ button {
 }
 
 /* ========================================
-   Todo 列表样式
+   Todo 列表样式;这一部分先copy，写js的时候再来理解
    ======================================== */
 .todo-list {
     list-style: none;
@@ -539,6 +540,7 @@ button {
 .todo-item:hover .todo-delete {
     opacity: 1;
 }
+/* 标记 */
 
 .todo-delete:hover {
     background-color: #fee;

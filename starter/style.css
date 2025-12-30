@@ -8,5 +8,340 @@
   - m10 + Tab = margin: 10px;
   - bgc#fff + Tab = background-color: #fff;
 */
+/* 自定义 */
+:root {
+  /* 主色调 - 低饱和浅天蓝 */
+  --sidebar-bg: #e8f4fc;
+  --sidebar-hover: #d0e8f5;
+  --sidebar-active: #b8dced;
+  
+  /* 背景色 */
+  --main-bg: #ffffff;
+  --card-bg: #ffffff;
+  
+  /* 文字颜色 */
+  --text-primary: #2c3e50;
+  --text-secondary: #7f8c8d;
+  --text-light: #95a5a6;
+  
+  /* 功能色 */
+  --primary-color: #5dade2;
+  --primary-hover: #3498db;
+  --success-color: #58d68d;
+  --warning-color: #f4d03f;
+  --danger-color: #ec7063;
+  
+  /* 边框和阴影 */
+  --border-color: #ecf0f1;
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+  /* 尺寸 */
+  --sidebar-width: 240px;
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+}
 
 
+/* 基础样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+               "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* 整体布局 */
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* 侧边栏 */
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+.sidebar-header {
+  padding: 32px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.tagline {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.nav-menu {
+  flex: 1;
+  padding: 16px 12px;
+}
+
+.nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: 6px;
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  transition: background-color 0.2s;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background-color: var(--sidebar-hover);
+}
+
+.nav-item.active {
+  background-color: var(--sidebar-active);
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 18px;
+  margin-right: 12px;
+}
+
+.sidebar-footer {
+  padding: 20px 24px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+/* 主内容区 */
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 40px 48px;
+  background-color: var(--main-bg);
+}
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
+}
+
+
+/* main区域 */
+.view-header {
+  margin-bottom: 32px;
+}
+
+.view-header h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.view-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+/* 标记 */
+/* 通用按钮样式 */
+.btn {
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+/* 标记 */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+
+.btn-primary:hover {
+  background-color: #3498db;
+}
+
+.todo-input-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 14px 18px;
+  background-color: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.todo-input:focus {
+  background-color: white;
+  border-color: var(--primary-color);
+}
+
+.todo-input::placeholder {
+  color: #95a5a6;
+}
+
+/* 筛选按钮样式 */
+.todo-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background-color: #f8f9fa;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background-color: #ecf0f1;
+}
+
+.filter-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.todo-count {
+  margin-left: auto;
+  font-size: 13px;
+  color: #95a5a6;
+}
+
+/* ========================================
+   Todo 列表样式
+   ======================================== */
+.todo-list {
+  list-style: none; 
+  /* 标记 */
+  margin-bottom: 20px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: white;
+  border: 1px solid #ecf0f1;
+  border-radius: var(--border-radius);
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+
+.todo-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* 已完成状态 */
+.todo-item.completed {
+  background-color: #f8f9fa;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+/* 标记 */
+  color: #95a5a6;
+}
+
+.todo-checkbox:hover {
+  border-color: var(--primary-color);
+}
+
+.todo-item.completed .todo-checkbox {
+  background-color: #58d68d;
+  border-color: #58d68d;
+}
+
+.todo-item.completed .todo-checkbox::after {
+  content: "✓";
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+/* 标记 */
+
+
+/* Todo 文本 */
+.todo-text {
+  flex: 1;
+  font-size: 15px;
+  word-break: break-word;
+}
+/* 标记 */
+
+
+/* 删除按钮 */
+.todo-delete {
+  padding: 6px 10px;
+  color: #95a5a6;
+  font-size: 18px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.todo-item:hover .todo-delete {
+  opacity: 1;
+}
+
+/* ========================================
+   空状态提示样式，标记
+   ======================================== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  display: none;
+}
+
+.empty-state.show {
+    display: block;
+}
+
+.empty-state p:first-child {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.empty-hint {
+    font-size: 14px;
+    color: #95a5a6;
+}

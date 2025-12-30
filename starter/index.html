@@ -5,5 +5,80 @@
   
   提示：输入 ! 然后按 Tab 键，可以快速生成 HTML5 基础结构
 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo MVC - 纯原生 JavaScript 实战项目</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 首先有哪些板块？有大盒子，有侧边栏，有主内容区 -->
+  <!-- 侧边栏有头部，中间，底部，有切换功能 -->
+   <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1 class="logo">📝 TodoMVC</h1>
+        <p class="tagline">纯原生 JS 实战</p>
+      </div>
+      <nav class="nav-menu">
+        <button class="nav-item active">
+          <span class="nav-icon">✅</span>
+          <span class="nav-text">Todo List</span>
+        </button>
+        <button class="nav-item">
+          <span class="nav-icon">⏰</span>
+          <span class="nav-text">倒数日</span>
+        </button>
+        <button class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">路线图</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <p>Made with Jaxon for learners</p>
+      </div>
+    </aside>
 
 
+    <main class="main-content">
+      <section class="view active" id="todo-view">
+        <header class="view-header">
+          <h2>Todo List</h2>
+          <p>记录你的待办事项和计划，管理日常任务</p>
+        </header>
+<!-- 这里有input框框，确认按钮，统计信息，列表 -->
+          <!-- 新增 Todo 输入区 -->
+        <div class="todo-input-container">
+          <input 
+          type="text" 
+          id="todo-input" 
+          class="todo-input" 
+          placeholder="输入新的待办事项，按回车添加..."
+          autocomplete="off"
+          >
+          <button id="add-todo-btn" class="btn btn-primary">添加</button>
+        </div>
+        <!-- 筛选按钮组 -->
+        <div class="todo-filters">
+          <button class="filter-btn active" data-filter="all">全部</button>
+          <button class="filter-btn" data-filter="active">未完成</button>
+          <button class="filter-btn" data-filter="completed">已完成</button>
+          <span class="todo-count">共 <span id="todo-count-num">0</span> 项</span>
+        </div>
+        <!-- Todo 列表容器 -->
+        <ul class="todo-list" id="todo-list">
+          <!-- Todo 项会通过 JS 动态添加到这里 -->
+        </ul>
+        <!-- 空状态提示 -->
+        <div class="empty-state" id="todo-empty">
+          <p>🎉 暂无待办事项</p>
+          <p class="empty-hint">在上方输入框添加你的第一个任务吧！</p>
+        </div>
+      </section>
+    </main>
+   </div>
+   <script src="app.js"></script>
+</body>
+</html>
