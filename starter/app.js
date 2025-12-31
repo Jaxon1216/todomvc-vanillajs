@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 用于存储所有 Todo 项的数组
 let todos = [];
-
+let currentFilter = 'all';
 /**
  * 初始化 Todo List 功能
  */
@@ -41,10 +41,27 @@ function initTodoList() {
             addTodo();
         }
     });
+
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
+    // 筛选按钮点击事件
+    filterBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            // 更新按钮状态
+            filterBtns.forEach(function(b) {
+                b.classList.remove('active');
+            });
+            this.classList.add('active');
+            
+            // 更新筛选状态并重新渲染
+            currentFilter = this.getAttribute('data-filter');
+            renderTodos();
+        });
+    });
     
     const todoList = document.getElementById('todo-list');
 
-// 使用事件委托处理列表中的点击事件，删除功能
+    // 使用事件委托处理列表中的点击事件，删除功能
     todoList.addEventListener('click', function(event) {
     // event.target 是实际被点击的元素
     const target = event.target;
@@ -65,6 +82,9 @@ function initTodoList() {
         deleteTodo(todoId);
     }
     });
+
+    loadTodosFromStorage();
+
     // 初始渲染
     renderTodos();
 }
@@ -92,7 +112,7 @@ function addTodo() {
     
     // 添加到数组
     todos.push(newTodo);
-    
+    saveTodosToStorage();
     // 清空输入框
     todoInput.value = '';
     
@@ -119,7 +139,23 @@ function renderTodos() {
     const todoEmpty = document.getElementById('todo-empty');
     const todoCountNum = document.getElementById('todo-count-num');
 
-
+    // 根据筛选条件过滤 Todo 项
+    let filteredTodos;
+    if (currentFilter === 'active') {
+        filteredTodos = todos.filter(function(item) {
+            return !item.completed; // 未完成的
+        });
+    } else if (currentFilter === 'completed') {
+        filteredTodos = todos.filter(function(item) {
+            return item.completed; // 已完成的
+        });
+    } else {
+        filteredTodos = todos; // 全部
+    }
+    
+    // 更新计数（显示筛选后的数量）
+    todoCountNum.textContent = filteredTodos.length;
+    
     // 如果没有 Todo 项，显示空状态
     if (todos.length === 0) {
         todoList.innerHTML = '';
@@ -131,9 +167,13 @@ function renderTodos() {
     todoEmpty.classList.remove('show');
     // 生成 HTML 字符串
     let html = '';
-    todos.forEach(function(todo) {
+    filteredTodos.forEach(function(todo) {
+
+        // 根据完成状态添加不同的类名
+        const completedClass = todo.completed ? 'completed' : '';
+    
         html += `
-            <li class="todo-item" data-id="${todo.id}">
+            <li class="todo-item ${completedClass}" data-id="${todo.id}">
                 <div class="todo-checkbox"></div>
                 <span class="todo-text">${todo.text}</span>
                 <button class="todo-delete">×</button>
@@ -150,15 +190,57 @@ function renderTodos() {
 //事件委托，点击li里面的button，这里用到了四个新的函数
 
 
-// 标记
+// 标记//
 function deleteTodo(id) {
     // 使用 filter 方法创建一个新数组，排除要删除的项
     todos = todos.filter(function(item) {
         return item.id !== id;
     });
-    
+    saveTodosToStorage();
     // 重新渲染
     renderTodos();
     
     console.log('删除了 ID 为', id, '的 Todo');
+}
+
+/**
+ * 切换 Todo 项的完成状态
+ * @param {number} id - Todo 项的 ID
+ */
+function toggleTodo(id) {
+    // 在数组中找到对应的 Todo 项
+    const todo = todos.find(function(item) {
+        return item.id === id;
+    });
+    
+    if (todo) {
+        // 切换完成状态（true 变 false，false 变 true）
+        todo.completed = !todo.completed;
+        saveTodosToStorage();
+        // 重新渲染
+        renderTodos();
+        
+        console.log('切换了 Todo 状态:', todo);
+    }
+}
+
+function saveTodosToStorage() {
+    // 把数组转换成 JSON 字符串后存储
+    localStorage.setItem('todos', JSON.stringify(todos));
+   // console.log('storage有： Todo 数据:', JSON.parse(localStorage.getItem('todos')));
+}
+
+/**
+ * 从 localStorage 加载 Todo 数据
+ */
+function loadTodosFromStorage() {
+    const stored = localStorage.getItem('todos');
+    if (stored) {
+        try {
+            todos = JSON.parse(stored);
+        } catch (e) {
+            // 如果解析失败，使用空数组
+            todos = [];
+        }
+    }
 }
