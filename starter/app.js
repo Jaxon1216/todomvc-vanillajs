@@ -12,7 +12,46 @@
 // 等待 DOM 加载完成后再执行代码
 document.addEventListener('DOMContentLoaded', function() {
     initTodoList();
+    initNavigation();
+    initCountdown();
+    // 启动定时器，每分钟刷新一次
+    startCountdownTimer();
 });
+
+//视图切换逻辑
+function initNavigation() {
+    // 获取所有导航按钮
+    const navItems = document.querySelectorAll('.nav-item');
+    // 获取所有视图页面
+    const views = document.querySelectorAll('.view');
+    
+    // 为每个导航按钮添加点击事件
+    navItems.forEach(function(navItem) {
+        navItem.addEventListener('click', function() {
+            // 获取要显示的视图名称（从 data-view 属性读取）
+            const targetView = this.getAttribute('data-view');
+            
+            // 移除所有导航按钮的 active 类
+            navItems.forEach(function(item) {
+                item.classList.remove('active');
+            });
+            
+            // 为当前点击的按钮添加 active 类
+            this.classList.add('active');
+            
+            // 隐藏所有视图
+            views.forEach(function(view) {
+                view.classList.remove('active');
+            });
+            
+            // 显示目标视图
+            const targetViewElement = document.getElementById(targetView + '-view');
+            if (targetViewElement) {
+                targetViewElement.classList.add('active');
+            }
+        });
+    });
+}
 
 // ========================================
 // Todo List 功能
@@ -244,3 +283,313 @@ function loadTodosFromStorage() {
         }
     }
 }
+
+// ========================================
+// 倒数日功能
+// ========================================
+
+// 用于存储所有倒数日的数组
+let countdowns = [];
+
+/**
+ * 初始化倒数日功能
+ */
+function initCountdown() {
+    // 从 localStorage 加载已保存的数据
+    loadCountdownsFromStorage();
+    
+    // 获取 DOM 元素
+    const countdownName = document.getElementById('countdown-name');
+    const countdownDate = document.getElementById('countdown-date');
+    const addCountdownBtn = document.getElementById('add-countdown-btn');
+    const countdownList = document.getElementById('countdown-list');
+    
+    // 点击添加按钮时添加新倒数日
+    addCountdownBtn.addEventListener('click', function() {
+        addCountdown();
+    });
+    
+    // 按回车键时添加新倒数日
+    countdownName.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            addCountdown();
+        }
+    });
+
+    // 获取倒数日列表容器
+    // const countdownList = document.getElementById('countdown-list');
+
+    // 使用事件委托处理倒数日列表中的点击事件
+    countdownList.addEventListener('click', function(event) {
+        const target = event.target;
+        const card = target.closest('.countdown-card');
+        if (!card) return;
+        
+        const countdownId = parseInt(card.getAttribute('data-id'));
+        
+        // 点击删除按钮
+        if (target.classList.contains('btn-danger')) {
+            deleteCountdown(countdownId);
+        }
+        // 标记，为什么写在这里？
+    });
+    
+    // 处理日期修改（change 事件）
+    countdownList.addEventListener('change', function(event) {
+        const target = event.target;
+        if (target.classList.contains('countdown-edit-date')) {
+            const card = target.closest('.countdown-card');
+            if (card) {
+                const countdownId = parseInt(card.getAttribute('data-id'));
+                updateCountdownDate(countdownId, target.value);
+            }
+        }
+    });
+    
+    // 初始渲染
+    renderCountdowns();
+}
+
+// 添加倒数日函数
+
+function addCountdown() {
+    const nameInput = document.getElementById('countdown-name');
+    const dateInput = document.getElementById('countdown-date');
+    
+    const name = nameInput.value.trim();
+    const date = dateInput.value;
+    
+    // 验证输入
+    if (name === '' || date === '') {
+        alert('请输入事件名称和日期！');
+        return;
+    }
+    
+    // 验证日期是否有效
+    const targetDate = new Date(date);
+    if (isNaN(targetDate.getTime())) {
+        alert('请输入有效的日期！');
+        return;
+    }
+    
+    // 创建新的倒数日对象
+    const newCountdown = {
+        id: Date.now(),
+        name: name,
+        date: date  // 存储格式：'2024-12-31'
+    };
+    
+    // 添加到数组
+    countdowns.push(newCountdown);
+    
+    // 保存到 localStorage
+    saveCountdownsToStorage();
+    
+    // 清空输入框
+    nameInput.value = '';
+    dateInput.value = '';
+    
+    // 重新渲染列表
+    renderCountdowns();
+    
+    console.log('添加了新倒数日:', newCountdown);
+}
+
+/**
+ * 删除倒数日
+ * @param {number} id - 倒数日的 ID
+ */
+function deleteCountdown(id) {
+    countdowns = countdowns.filter(function(item) {
+        return item.id !== id;
+    });
+    console.log('删除了 ID 为', id, '的倒数日');
+    
+    saveCountdownsToStorage();
+    renderCountdowns();
+}
+
+/**
+ * 计算距离目标日期还有多少天
+ * @param {string} dateString - 目标日期字符串 (YYYY-MM-DD 格式)
+ * @returns {number} 剩余天数（负数表示已过期）
+ */
+function calculateDaysRemaining(dateString) {
+    // 获取今天的日期（设置时分秒为0，只比较日期部分）
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // 解析目标日期
+    const targetDate = new Date(dateString);
+    targetDate.setHours(0, 0, 0, 0);
+    
+    // 计算时间差（毫秒）
+    const timeDiff = targetDate.getTime() - today.getTime();
+    
+    // 转换为天数
+    // 1天 = 24小时 × 60分钟 × 60秒 × 1000毫秒 = 86400000毫秒
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    
+    return daysDiff;
+}
+
+/**
+ * 启动倒计时刷新定时器
+ */
+function startCountdownTimer() {
+    // 每分钟刷新一次（60000 毫秒）
+    setInterval(function() {
+        renderCountdowns();
+    }, 60000);
+}
+
+
+
+
+
+
+/**
+ * 渲染倒数日列表
+ */
+function renderCountdowns() {
+    const countdownList = document.getElementById('countdown-list');
+    const countdownEmpty = document.getElementById('countdown-empty');
+    
+    // 如果没有倒数日，显示空状态
+    if (countdowns.length === 0) {
+        countdownList.innerHTML = '';
+        countdownEmpty.classList.add('show');
+        return;
+    }
+    
+    // 隐藏空状态
+    countdownEmpty.classList.remove('show');
+
+
+    // 标记
+    // 按日期排序（最近的在前面）
+    const sortedCountdowns = [...countdowns].sort(function(a, b) {
+        return new Date(a.date) - new Date(b.date);
+    });
+
+    // 生成简单的 HTML
+    let html = '';
+    sortedCountdowns.forEach(function(countdown) {
+        const daysRemaining = calculateDaysRemaining(countdown.date);
+     
+        const formattedDate = formatDate(countdown.date);
+        
+        let statusClass = '';
+        let daysText = '';
+        let daysLabel = '';
+        
+        if (daysRemaining === 0) {
+            statusClass = 'today';
+            daysText = '🎉';
+            daysLabel = '就是今天！';
+        } else if (daysRemaining > 0) {
+            daysText = daysRemaining;
+            daysLabel = '天后';
+        } else {
+            statusClass = 'past';
+            daysText = Math.abs(daysRemaining);
+            daysLabel = '天前';
+        }
+        
+        html += `
+            <div class="countdown-card ${statusClass}" data-id="${countdown.id}">
+                <div class="countdown-info">
+                    <div class="countdown-name">${escapeHtml(countdown.name)}</div>
+                    <div class="countdown-date-display">
+                        目标日期：${formattedDate}
+                        <input type="date" class="countdown-edit-date" value="${countdown.date}" 
+                            style="margin-left: 12px; padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px;">
+                    </div>
+                </div>
+                <div class="countdown-days">
+                    <div class="countdown-number">${daysText}</div>
+                    <div class="countdown-label">${daysLabel}</div>
+                </div>
+                <div class="countdown-actions">
+                    <button class="btn btn-small btn-danger">删除</button>
+                </div>
+            </div>
+        `;
+    });
+  
+    
+    // 更新 DOM
+    countdownList.innerHTML = html;
+}
+
+/**
+ * 启动倒计时刷新定时器
+ */
+function startCountdownTimer() {
+    // 每分钟刷新一次（60000 毫秒）
+    countdownTimer = setInterval(function() {
+        renderCountdowns();
+    }, 60000);
+}
+
+
+
+function loadCountdownsFromStorage() {
+    const stored = localStorage.getItem('countdowns');
+    if (stored) {
+        try {
+            countdowns = JSON.parse(stored);
+        } catch (e) {
+            countdowns = [];
+        }
+    }
+}
+
+
+function saveCountdownsToStorage() {
+    localStorage.setItem('countdowns', JSON.stringify(countdowns));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ========================================
+// 工具函数
+// ========================================
+
+/**
+ * HTML 转义，防止 XSS 攻击
+ * @param {string} text - 要转义的文本
+ * @returns {string} 转义后的安全文本
+ */
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+/**
+ * 格式化日期为中文格式
+ * @param {string} dateString - 日期字符串 (YYYY-MM-DD)
+ * @returns {string} 格式化后的日期
+ */
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    console.log('')
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;  // getMonth() 返回 0-11
+    const day = date.getDate();
+    return year + '年' + month + '月' + day + '日';
+}
+
+
+

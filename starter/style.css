@@ -360,3 +360,129 @@ button {
     font-size: 14px;
     color: #95a5a6;
 }
+
+/* ========================================
+   倒数日页面样式
+   ======================================== */
+
+/* 输入区域 */
+
+.countdown-input-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.countdown-input {
+  padding: 14px 18px;
+  background-color: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+
+.countdown-input:first-child {
+  flex: 1;
+  min-width: 200px;
+}
+
+.countdown-date {
+  width: 180px;
+}
+
+.countdown-input:focus {
+  background-color: white;
+  border-color: #5dade2;
+}
+
+/* 倒数日列表 */
+.countdown-list {
+  display: grid;
+  gap: 16px;
+}
+/* grid布局，标记 */
+
+/* 倒数日卡片 */
+.countdown-card {
+  background-color: white;
+  border: 1px solid #ecf0f1;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s;
+}
+
+
+.countdown-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.countdown-info {
+  flex: 1;
+}
+
+.countdown-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 6px;
+}
+
+.countdown-date-display {
+  font-size: 13px;
+  color: #7f8c8d;
+}
+
+.countdown-days {
+  text-align: center;
+  padding: 0 24px;
+}
+
+.countdown-number {
+  font-size: 42px;
+  font-weight: 700;
+  color: #5dade2;
+  line-height: 1;
+}
+
+.countdown-label {
+  font-size: 13px;
+  color: #7f8c8d;
+  margin-top: 4px;
+}
+
+/* 已过期状态 */
+.countdown-card.past .countdown-number {
+  color: #95a5a6;
+}
+
+/* 今天状态 */
+.countdown-card.today .countdown-number {
+  color: #58d68d;
+}
+
+/* 操作按钮 */
+.countdown-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-danger {
+  background-color: #ec7063;
+  color: white;
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+}

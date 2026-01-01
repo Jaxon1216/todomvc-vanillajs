@@ -23,15 +23,15 @@
         <p class="tagline">纯原生 JS 实战</p>
       </div>
       <nav class="nav-menu">
-        <button class="nav-item active">
+        <button class="nav-item active" data-view="todo">
           <span class="nav-icon">✅</span>
           <span class="nav-text">Todo List</span>
         </button>
-        <button class="nav-item">
+        <button class="nav-item" data-view="countdown">
           <span class="nav-icon">⏰</span>
           <span class="nav-text">倒数日</span>
         </button>
-        <button class="nav-item">
+        <button class="nav-item" data-view="timeline">
           <span class="nav-icon">📊</span>
           <span class="nav-text">路线图</span>
         </button>
@@ -76,6 +76,37 @@
           <p>🎉 暂无待办事项</p>
           <p class="empty-hint">在上方输入框添加你的第一个任务吧！</p>
         </div>
+      </section>
+      <section class="view" id="countdown-view">
+        <header class="view-header">
+            <h2>倒数日</h2>
+            <p class="view-desc">记录重要日期，倒计时提醒不遗忘</p>
+        </header>
+        
+        <!-- 新增倒数日输入区 -->
+        <div class="countdown-input-container">
+            <input 
+                type="text" 
+                id="countdown-name" 
+                class="countdown-input" 
+                placeholder="事件名称（如：生日、考试）"
+                autocomplete="off"
+            >
+            <input 
+                type="date" 
+                id="countdown-date" 
+                class="countdown-input countdown-date"
+            >
+            <button id="add-countdown-btn" class="btn btn-primary">添加</button>
+        </div>
+        <div class="countdown-list" id="countdown-list">
+          <!-- 倒数日卡片会通过 JS 动态添加到这里 -->
+        </div>
+        <div class="empty-state" id="countdown-empty">
+          <p>📅 暂无倒数日</p>
+          <p class="empty-hint">添加一个重要日期开始倒计时吧！</p>
+        </div>
+
       </section>
     </main>
    </div>
