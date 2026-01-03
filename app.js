@@ -691,8 +691,13 @@ function renderTimeline() {
         return m.status === 'pending';
     });
     
-    // 如果没有活跃的里程碑，隐藏时间轴
+    // 如果没有活跃的里程碑，清除节点并隐藏时间轴
     if (activeMilestones.length === 0) {
+        // 先清除所有里程碑节点，避免节点残留
+        const existingNodes = timelineTrack.querySelectorAll('.milestone-node');
+        existingNodes.forEach(function(node) {
+            node.remove();
+        });
         timelineContainer.classList.remove('show');
         return;
     }
