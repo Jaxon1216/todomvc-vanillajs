@@ -1,36 +1,25 @@
 /**
- * ========================================
- * TodoMVC - 纯原生 JavaScript 实战项目
- * ========================================
+ * 📝 TodoMVC JavaScript 文件
  * 
- * 这个文件包含了整个应用的所有 JavaScript 逻辑：
- * 1. 视图切换（侧边栏导航）
- * 2. Todo List 功能
- * 3. 倒数日功能
- * 4. 路线图/进度表功能
+ * 跟着教程，在这里编写 JavaScript 代码
  * 
- * 所有代码都使用纯原生 JavaScript，不依赖任何框架或库
+ * 提示：
+ * - 使用 console.log() 调试
+ * - 按 F12 打开浏览器开发者工具查看输出
  */
 
-// ========================================
+
 // 等待 DOM 加载完成后再执行代码
-// ========================================
 document.addEventListener('DOMContentLoaded', function() {
-    // 初始化所有模块
-    initNavigation();
     initTodoList();
+    initNavigation();
     initCountdown();
+    // 启动定时器，每分钟刷新一次
+    startCountdownTimer();
     initTimeline();
 });
 
-// ========================================
-// 第一部分：视图切换（侧边栏导航）
-// ========================================
-
-/**
- * 初始化导航功能
- * 实现点击侧边栏菜单时切换显示对应的页面
- */
+//视图切换逻辑
 function initNavigation() {
     // 获取所有导航按钮
     const navItems = document.querySelectorAll('.nav-item');
@@ -66,26 +55,19 @@ function initNavigation() {
 }
 
 // ========================================
-// 第二部分：Todo List 功能
+// Todo List 功能
 // ========================================
 
 // 用于存储所有 Todo 项的数组
 let todos = [];
-// 当前筛选状态：'all' | 'active' | 'completed'
 let currentFilter = 'all';
-
 /**
  * 初始化 Todo List 功能
  */
 function initTodoList() {
-    // 从 localStorage 加载已保存的数据
-    loadTodosFromStorage();
-    
     // 获取 DOM 元素
     const todoInput = document.getElementById('todo-input');
     const addTodoBtn = document.getElementById('add-todo-btn');
-    const todoList = document.getElementById('todo-list');
-    const filterBtns = document.querySelectorAll('.filter-btn');
     
     // 点击添加按钮时添加新 Todo
     addTodoBtn.addEventListener('click', function() {
@@ -94,32 +76,14 @@ function initTodoList() {
     
     // 按回车键时添加新 Todo
     todoInput.addEventListener('keypress', function(event) {
-        // keyCode 13 代表回车键
-        if (event.key === 'Enter' || event.keyCode === 13) {
+        // event.key === 'Enter' 表示按下了回车键
+        if (event.key === 'Enter') {
             addTodo();
         }
     });
-    
-    // 使用事件委托处理 Todo 列表中的点击事件
-    // 事件委托：在父元素上监听事件，而不是在每个子元素上单独监听
-    todoList.addEventListener('click', function(event) {
-        const target = event.target;
-        
-        // 获取被点击元素所属的 Todo 项
-        const todoItem = target.closest('.todo-item');
-        if (!todoItem) return;
-        
-        // 获取 Todo 项的 ID
-        const todoId = parseInt(todoItem.getAttribute('data-id'));
-        
-        // 判断点击的是复选框还是删除按钮
-        if (target.classList.contains('todo-checkbox')) {
-            toggleTodo(todoId);
-        } else if (target.classList.contains('todo-delete')) {
-            deleteTodo(todoId);
-        }
-    });
-    
+
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
     // 筛选按钮点击事件
     filterBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
@@ -135,41 +99,148 @@ function initTodoList() {
         });
     });
     
+    const todoList = document.getElementById('todo-list');
+
+    // 使用事件委托处理列表中的点击事件，删除功能
+    todoList.addEventListener('click', function(event) {
+    // event.target 是实际被点击的元素
+    const target = event.target;
+    
+    // 获取被点击元素所属的 Todo 项
+    const todoItem = target.closest('.todo-item');
+    if (!todoItem) return; // 如果没找到，说明点击的不是 Todo 项内部
+    
+    // 获取 Todo 项的 ID（从 data-id 属性读取）
+    const todoId = parseInt(todoItem.getAttribute('data-id'));
+    
+
+    // 标记
+    // 判断点击的是删除按钮
+    if (target.classList.contains('todo-checkbox')) {
+        toggleTodo(todoId);
+    } else if (target.classList.contains('todo-delete')) {
+        deleteTodo(todoId);
+    }
+    });
+
+    loadTodosFromStorage();
+
     // 初始渲染
     renderTodos();
 }
 
+
 /**
  * 添加新的 Todo 项
  */
+//思路：把input内容取过来，同时清空表单，放到本地，
+//get：获取输入框元素，判空，对象的属性，
+
 function addTodo() {
     const todoInput = document.getElementById('todo-input');
     const text = todoInput.value.trim();
-    
-    // 如果输入为空，不添加
+    // 标记
     if (text === '') {
         return;
     }
-    
-    // 创建新的 Todo 对象
     const newTodo = {
-        id: Date.now(), // 使用时间戳作为唯一 ID
+        id: Date.now(),
+        // 标记
         text: text,
         completed: false,
-        createdAt: new Date().toISOString()
     };
     
     // 添加到数组
     todos.push(newTodo);
-    
-    // 保存到 localStorage
     saveTodosToStorage();
-    
     // 清空输入框
     todoInput.value = '';
     
     // 重新渲染列表
     renderTodos();
+    // 如果写在外面，那就永远只能渲染一次，东西存进去了但是不会显示
+    
+    // 在控制台输出，方便调试
+    console.log('添加了新 Todo:', newTodo);
+    console.log('当前所有 Todo:', todos);
+}
+
+/**
+ * 渲染 Todo 列表
+ */
+
+//思路：更新统计个数，添加子节点吧？考虑特殊情况（判空），伪代码：
+// 获取dom节点，
+// 统计个数改为长度
+// 用模版字符串改写html，动态添加到ul下
+function renderTodos() {
+    // 获取列表容器和空状态提示
+    const todoList = document.getElementById('todo-list');
+    const todoEmpty = document.getElementById('todo-empty');
+    const todoCountNum = document.getElementById('todo-count-num');
+
+    // 根据筛选条件过滤 Todo 项
+    let filteredTodos;
+    if (currentFilter === 'active') {
+        filteredTodos = todos.filter(function(item) {
+            return !item.completed; // 未完成的
+        });
+    } else if (currentFilter === 'completed') {
+        filteredTodos = todos.filter(function(item) {
+            return item.completed; // 已完成的
+        });
+    } else {
+        filteredTodos = todos; // 全部
+    }
+    
+    // 更新计数（显示筛选后的数量）
+    todoCountNum.textContent = filteredTodos.length;
+    
+    // 如果没有 Todo 项，显示空状态
+    if (todos.length === 0) {
+        todoList.innerHTML = '';
+        todoEmpty.classList.add('show');
+        return;
+    }    
+
+    // 隐藏空状态
+    todoEmpty.classList.remove('show');
+    // 生成 HTML 字符串
+    let html = '';
+    filteredTodos.forEach(function(todo) {
+
+        // 根据完成状态添加不同的类名
+        const completedClass = todo.completed ? 'completed' : '';
+    
+        html += `
+            <li class="todo-item ${completedClass}" data-id="${todo.id}">
+                <div class="todo-checkbox"></div>
+                <span class="todo-text">${todo.text}</span>
+                <button class="todo-delete">×</button>
+            </li>
+        `;
+    });
+    // 更新 DOM
+    todoList.innerHTML = html;
+}
+
+
+//删除功能，伪代码：
+//获取节点，他们的父级盒子应该是todo-list
+//事件委托，点击li里面的button，这里用到了四个新的函数
+
+
+// 标记//
+function deleteTodo(id) {
+    // 使用 filter 方法创建一个新数组，排除要删除的项
+    todos = todos.filter(function(item) {
+        return item.id !== id;
+    });
+    saveTodosToStorage();
+    // 重新渲染
+    renderTodos();
+    
+    console.log('删除了 ID 为', id, '的 Todo');
 }
 
 /**
@@ -183,83 +254,20 @@ function toggleTodo(id) {
     });
     
     if (todo) {
-        // 切换完成状态
+        // 切换完成状态（true 变 false，false 变 true）
         todo.completed = !todo.completed;
-        
-        // 保存并重新渲染
         saveTodosToStorage();
+        // 重新渲染
         renderTodos();
-    }
-}
-
-/**
- * 删除 Todo 项
- * @param {number} id - Todo 项的 ID
- */
-function deleteTodo(id) {
-    // 使用 filter 方法创建一个新数组，排除要删除的项
-    todos = todos.filter(function(item) {
-        return item.id !== id;
-    });
-    
-    // 保存并重新渲染
-    saveTodosToStorage();
-    renderTodos();
-}
-
-/**
- * 渲染 Todo 列表
- * 根据当前筛选状态显示对应的 Todo 项
- */
-function renderTodos() {
-    const todoList = document.getElementById('todo-list');
-    const todoEmpty = document.getElementById('todo-empty');
-    const todoCountNum = document.getElementById('todo-count-num');
-    
-    // 根据筛选条件过滤 Todo 项
-    let filteredTodos;
-    if (currentFilter === 'active') {
-        filteredTodos = todos.filter(function(item) {
-            return !item.completed;
-        });
-    } else if (currentFilter === 'completed') {
-        filteredTodos = todos.filter(function(item) {
-            return item.completed;
-        });
-    } else {
-        filteredTodos = todos;
-    }
-    
-    // 更新计数
-    todoCountNum.textContent = filteredTodos.length;
-    
-    // 如果没有 Todo 项，显示空状态
-    if (filteredTodos.length === 0) {
-        todoList.innerHTML = '';
-        todoEmpty.classList.add('show');
-        return;
-    }
-    
-    // 隐藏空状态
-    todoEmpty.classList.remove('show');
-    
-    // 生成 HTML
-    let html = '';
-    filteredTodos.forEach(function(todo) {
-        // 根据完成状态添加不同的类名
-        const completedClass = todo.completed ? 'completed' : '';
         
-        html += `
-            <li class="todo-item ${completedClass}" data-id="${todo.id}">
-                <div class="todo-checkbox"></div>
-                <span class="todo-text">${escapeHtml(todo.text)}</span>
-                <button class="todo-delete">×</button>
-            </li>
-        `;
-    });
-    
-    // 更新 DOM
-    todoList.innerHTML = html;
+        console.log('切换了 Todo 状态:', todo);
+    }
+}
+
+function saveTodosToStorage() {
+    // 把数组转换成 JSON 字符串后存储
+    localStorage.setItem('todos', JSON.stringify(todos));
+   // console.log('storage有： Todo 数据:', JSON.parse(localStorage.getItem('todos')));
 }
 
 /**
@@ -277,21 +285,12 @@ function loadTodosFromStorage() {
     }
 }
 
-/**
- * 保存 Todo 数据到 localStorage
- */
-function saveTodosToStorage() {
-    localStorage.setItem('todos', JSON.stringify(todos));
-}
-
 // ========================================
-// 第三部分：倒数日功能
+// 倒数日功能
 // ========================================
 
 // 用于存储所有倒数日的数组
 let countdowns = [];
-// 定时器引用（用于实时刷新倒计时）
-let countdownTimer = null;
 
 /**
  * 初始化倒数日功能
@@ -306,10 +305,6 @@ function initCountdown() {
     const addCountdownBtn = document.getElementById('add-countdown-btn');
     const countdownList = document.getElementById('countdown-list');
     
-    // 设置日期输入框的最小值为今天
-    const today = new Date().toISOString().split('T')[0];
-    countdownDate.setAttribute('min', today);
-    
     // 点击添加按钮时添加新倒数日
     addCountdownBtn.addEventListener('click', function() {
         addCountdown();
@@ -317,11 +312,14 @@ function initCountdown() {
     
     // 按回车键时添加新倒数日
     countdownName.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter' || event.keyCode === 13) {
+        if (event.key === 'Enter') {
             addCountdown();
         }
     });
-    
+
+    // 获取倒数日列表容器
+    // const countdownList = document.getElementById('countdown-list');
+
     // 使用事件委托处理倒数日列表中的点击事件
     countdownList.addEventListener('click', function(event) {
         const target = event.target;
@@ -330,12 +328,14 @@ function initCountdown() {
         
         const countdownId = parseInt(card.getAttribute('data-id'));
         
+        // 点击删除按钮
         if (target.classList.contains('btn-danger')) {
             deleteCountdown(countdownId);
         }
+        // 标记，为什么写在这里？
     });
     
-    // 处理日期修改
+    // 处理日期修改（change 事件）
     countdownList.addEventListener('change', function(event) {
         const target = event.target;
         if (target.classList.contains('countdown-edit-date')) {
@@ -349,14 +349,10 @@ function initCountdown() {
     
     // 初始渲染
     renderCountdowns();
-    
-    // 启动定时器，每分钟刷新一次倒计时显示
-    startCountdownTimer();
 }
 
-/**
- * 添加新的倒数日
- */
+// 添加倒数日函数
+
 function addCountdown() {
     const nameInput = document.getElementById('countdown-name');
     const dateInput = document.getElementById('countdown-date');
@@ -381,8 +377,7 @@ function addCountdown() {
     const newCountdown = {
         id: Date.now(),
         name: name,
-        date: date,
-        createdAt: new Date().toISOString()
+        date: date  // 存储格式：'2024-12-31'
     };
     
     // 添加到数组
@@ -397,24 +392,22 @@ function addCountdown() {
     
     // 重新渲染列表
     renderCountdowns();
+    
+    console.log('添加了新倒数日:', newCountdown);
 }
 
-
 /**
- * 更新倒数日的日期
+ * 删除倒数日
  * @param {number} id - 倒数日的 ID
- * @param {string} newDate - 新的日期字符串
  */
-function updateCountdownDate(id, newDate) {
-    const countdown = countdowns.find(function(item) {
-        return item.id === id;
+function deleteCountdown(id) {
+    countdowns = countdowns.filter(function(item) {
+        return item.id !== id;
     });
+    console.log('删除了 ID 为', id, '的倒数日');
     
-    if (countdown && newDate) {
-        countdown.date = newDate;
-        saveCountdownsToStorage();
-        renderCountdowns();
-    }
+    saveCountdownsToStorage();
+    renderCountdowns();
 }
 
 /**
@@ -423,7 +416,7 @@ function updateCountdownDate(id, newDate) {
  * @returns {number} 剩余天数（负数表示已过期）
  */
 function calculateDaysRemaining(dateString) {
-    // 获取今天的日期（去掉时分秒，只保留日期部分）
+    // 获取今天的日期（设置时分秒为0，只比较日期部分）
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
@@ -442,6 +435,21 @@ function calculateDaysRemaining(dateString) {
 }
 
 /**
+ * 启动倒计时刷新定时器
+ */
+function startCountdownTimer() {
+    // 每分钟刷新一次（60000 毫秒）
+    setInterval(function() {
+        renderCountdowns();
+    }, 60000);
+}
+
+
+
+
+
+
+/**
  * 渲染倒数日列表
  */
 function renderCountdowns() {
@@ -457,18 +465,21 @@ function renderCountdowns() {
     
     // 隐藏空状态
     countdownEmpty.classList.remove('show');
-    
+
+
+    // 标记
     // 按日期排序（最近的在前面）
     const sortedCountdowns = [...countdowns].sort(function(a, b) {
         return new Date(a.date) - new Date(b.date);
     });
-    
-    // 生成 HTML
+
+    // 生成简单的 HTML
     let html = '';
     sortedCountdowns.forEach(function(countdown) {
         const daysRemaining = calculateDaysRemaining(countdown.date);
+     
+        const formattedDate = formatDate(countdown.date);
         
-        // 根据剩余天数确定状态类
         let statusClass = '';
         let daysText = '';
         let daysLabel = '';
@@ -486,9 +497,6 @@ function renderCountdowns() {
             daysLabel = '天前';
         }
         
-        // 格式化日期显示
-        const formattedDate = formatDate(countdown.date);
-        
         html += `
             <div class="countdown-card ${statusClass}" data-id="${countdown.id}">
                 <div class="countdown-info">
@@ -496,7 +504,7 @@ function renderCountdowns() {
                     <div class="countdown-date-display">
                         目标日期：${formattedDate}
                         <input type="date" class="countdown-edit-date" value="${countdown.date}" 
-                               style="margin-left: 12px; padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px;">
+                            style="margin-left: 12px; padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px;">
                     </div>
                 </div>
                 <div class="countdown-days">
@@ -509,6 +517,7 @@ function renderCountdowns() {
             </div>
         `;
     });
+  
     
     // 更新 DOM
     countdownList.innerHTML = html;
@@ -524,9 +533,8 @@ function startCountdownTimer() {
     }, 60000);
 }
 
-/**
- * 从 localStorage 加载倒数日数据
- */
+
+
 function loadCountdownsFromStorage() {
     const stored = localStorage.getItem('countdowns');
     if (stored) {
@@ -538,21 +546,60 @@ function loadCountdownsFromStorage() {
     }
 }
 
-/**
- * 保存倒数日数据到 localStorage
- */
+
 function saveCountdownsToStorage() {
     localStorage.setItem('countdowns', JSON.stringify(countdowns));
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ========================================
-// 第四部分：路线图/进度表功能
+// 工具函数
+// ========================================
+
+/**
+ * HTML 转义，防止 XSS 攻击
+ * @param {string} text - 要转义的文本
+ * @returns {string} 转义后的安全文本
+ */
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+/**
+ * 格式化日期为中文格式
+ * @param {string} dateString - 日期字符串 (YYYY-MM-DD)
+ * @returns {string} 格式化后的日期
+ */
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    console.log('')
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;  // getMonth() 返回 0-11
+    const day = date.getDate();
+    return year + '年' + month + '月' + day + '日';
+}
+
+
+
+// ========================================
+// 路线图/进度表功能
 // ========================================
 
 // 用于存储所有里程碑的数组
 let milestones = [];
-// 时间轴的时间范围（天数）
-const TIMELINE_RANGE_DAYS = 90; // 默认显示90天的范围
 
 /**
  * 初始化路线图功能
@@ -565,11 +612,6 @@ function initTimeline() {
     const milestoneName = document.getElementById('milestone-name');
     const milestoneDate = document.getElementById('milestone-date');
     const addMilestoneBtn = document.getElementById('add-milestone-btn');
-    const milestoneList = document.getElementById('milestone-list');
-    
-    // 设置日期输入框的默认最小值
-    const today = new Date().toISOString().split('T')[0];
-    milestoneDate.setAttribute('min', today);
     
     // 点击添加按钮时添加新里程碑
     addMilestoneBtn.addEventListener('click', function() {
@@ -578,36 +620,8 @@ function initTimeline() {
     
     // 按回车键时添加新里程碑
     milestoneName.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter' || event.keyCode === 13) {
+        if (event.key === 'Enter') {
             addMilestone();
-        }
-    });
-    
-    // 使用事件委托处理里程碑列表中的事件
-    milestoneList.addEventListener('click', function(event) {
-        const target = event.target;
-        const card = target.closest('.milestone-card');
-        if (!card) return;
-        
-        const milestoneId = parseInt(card.getAttribute('data-id'));
-        
-        if (target.classList.contains('btn-danger')) {
-            deleteMilestone(milestoneId);
-        }
-    });
-    
-    // 处理状态变更
-    milestoneList.addEventListener('change', function(event) {
-        const target = event.target;
-        const card = target.closest('.milestone-card');
-        if (!card) return;
-        
-        const milestoneId = parseInt(card.getAttribute('data-id'));
-        
-        if (target.classList.contains('status-select')) {
-            updateMilestoneStatus(milestoneId, target.value);
-        } else if (target.classList.contains('milestone-edit-date')) {
-            updateMilestoneDate(milestoneId, target.value);
         }
     });
     
@@ -615,6 +629,7 @@ function initTimeline() {
     renderTimeline();
     renderMilestones();
 }
+
 
 /**
  * 添加新的里程碑
@@ -644,9 +659,8 @@ function addMilestone() {
         id: Date.now(),
         name: name,
         date: date,
-        status: 'pending', // 'pending' | 'completed' | 'cancelled'
-        completedDate: null, // 完成日期
-        createdAt: new Date().toISOString()
+        status: 'pending',      // 'pending' | 'completed' | 'cancelled'
+        completedDate: null     // 完成时记录完成日期
     };
     
     // 添加到数组
@@ -665,23 +679,121 @@ function addMilestone() {
 }
 
 /**
- * 删除里程碑
- * @param {number} id - 里程碑的 ID
+ * 渲染时间轴
  */
-function deleteMilestone(id) {
-    milestones = milestones.filter(function(item) {
-        return item.id !== id;
+function renderTimeline() {
+    const timelineContainer = document.getElementById('timeline-container');
+    const timelineTrack = document.getElementById('timeline-track');
+    const todayMarker = document.getElementById('today-marker');
+    
+    // 只显示进行中的里程碑（已完成和已取消的不在时间轴显示）
+    const activeMilestones = milestones.filter(function(m) {
+        return m.status === 'pending';
     });
     
-    saveMilestonesToStorage();
-    renderTimeline();
-    renderMilestones();
+    // 如果没有活跃的里程碑，隐藏时间轴
+    if (activeMilestones.length === 0) {
+        timelineContainer.classList.remove('show');
+        return;
+    }
+    
+    // 显示时间轴
+    timelineContainer.classList.add('show');
+    
+    // 计算时间范围
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // 找出所有日期的最小值和最大值
+    // minDate 就是今天（时间轴从今天开始）
+    let minDate = new Date(today);
+    let maxDate = new Date(today);
+    maxDate.setDate(maxDate.getDate() + 30);  // 默认至少显示30天
+    
+    activeMilestones.forEach(function(m) {
+        const mDate = new Date(m.date);
+        // 只考虑未来的里程碑来扩展时间轴
+        if (mDate > maxDate) maxDate = new Date(mDate);
+    });
+    
+    // 在右端加一些余量（左端不需要，因为从今天开始）
+    maxDate.setDate(maxDate.getDate() + 14);
+    
+    // 今天标记已经用起点表示，不需要单独计算位置
+    
+    // 清除已有的里程碑节点（保留今天标记）
+    const existingNodes = timelineTrack.querySelectorAll('.milestone-node');
+    existingNodes.forEach(function(node) {
+        node.remove();
+    });
+    
+    // 添加里程碑节点
+    activeMilestones.forEach(function(milestone) {
+        const mDate = new Date(milestone.date);
+        const position = ((mDate - minDate) / (maxDate - minDate)) * 100;
+        
+        // 创建节点元素
+        const node = document.createElement('div');
+        node.className = 'milestone-node';
+        
+        // 添加状态类
+        if (milestone.status === 'completed') {
+            node.classList.add('completed');
+        }
+        
+        // 设置位置
+        node.style.left = position + '%';
+        
+        // 设置内容
+        node.innerHTML = `
+            <div class="milestone-dot"></div>
+            <div class="milestone-node-label">${escapeHtml(milestone.name)}</div>
+        `;
+        
+        // 添加到时间轴
+        timelineTrack.appendChild(node);
+    });
 }
+
+
+const milestoneList = document.getElementById('milestone-list');
+
+// 使用事件委托处理里程碑列表中的事件
+milestoneList.addEventListener('click', function(event) {
+    const target = event.target;
+    const card = target.closest('.milestone-card');
+    if (!card) return;
+    
+    const milestoneId = parseInt(card.getAttribute('data-id'));
+    
+    // 点击删除按钮
+    if (target.classList.contains('btn-danger')) {
+        deleteMilestone(milestoneId);
+    }
+});
+
+// 处理状态变更和日期修改
+milestoneList.addEventListener('change', function(event) {
+    const target = event.target;
+    const card = target.closest('.milestone-card');
+    if (!card) return;
+    
+    const milestoneId = parseInt(card.getAttribute('data-id'));
+    
+    // 状态选择器变更
+    if (target.classList.contains('status-select')) {
+        updateMilestoneStatus(milestoneId, target.value);
+    }
+    // 日期输入框变更
+    else if (target.classList.contains('milestone-edit-date')) {
+        updateMilestoneDate(milestoneId, target.value);
+    }
+});
 
 /**
  * 更新里程碑状态
  * @param {number} id - 里程碑的 ID
- * @param {string} newStatus - 新状态
+ * @param {string} newStatus - 新状态：'pending' | 'completed' | 'cancelled'
  */
 function updateMilestoneStatus(id, newStatus) {
     const milestone = milestones.find(function(item) {
@@ -699,9 +811,25 @@ function updateMilestoneStatus(id, newStatus) {
         }
         
         saveMilestonesToStorage();
+        
+        // 重新渲染时间轴和卡片
         renderTimeline();
         renderMilestones();
     }
+}
+
+/**
+ * 删除里程碑
+ * @param {number} id - 里程碑的 ID
+ */
+function deleteMilestone(id) {
+    milestones = milestones.filter(function(item) {
+        return item.id !== id;
+    });
+    
+    saveMilestonesToStorage();
+    renderTimeline();
+    renderMilestones();
 }
 
 /**
@@ -717,92 +845,11 @@ function updateMilestoneDate(id, newDate) {
     if (milestone && newDate) {
         milestone.date = newDate;
         saveMilestonesToStorage();
+        
+        // 重新渲染（这会重新计算时间轴范围和位置）
         renderTimeline();
         renderMilestones();
     }
-}
-
-/**
- * 渲染时间轴
- * 使用简化比例模型，不追求精确刻度
- */
-function renderTimeline() {
-    const timelineContainer = document.getElementById('timeline-container');
-    const timelineTrack = document.getElementById('timeline-track');
-    const todayMarker = document.getElementById('today-marker');
-    
-    // 只显示进行中的里程碑（已完成和已取消的不在时间轴显示）
-    const activeMilestones = milestones.filter(function(m) {
-        return m.status === 'pending';
-    });
-    
-    // 如果没有里程碑，隐藏时间轴
-    if (activeMilestones.length === 0) {
-        timelineContainer.classList.remove('show');
-        return;
-    }
-    
-    // 显示时间轴
-    timelineContainer.classList.add('show');
-    
-    // 计算时间范围
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    // 找出所有日期，确定时间轴范围
-    // minDate 就是今天（时间轴从今天开始）
-    let minDate = new Date(today);
-    let maxDate = new Date(today);
-    maxDate.setDate(maxDate.getDate() + 30); // 默认至少显示30天
-    
-    activeMilestones.forEach(function(m) {
-        const mDate = new Date(m.date);
-        // 只考虑未来的里程碑来扩展时间轴
-        if (mDate > maxDate) maxDate = new Date(mDate);
-    });
-    
-    // 在右端加一些余量（左端不需要，因为从今天开始）
-    maxDate.setDate(maxDate.getDate() + 14);
-    
-    // 计算总时间跨度（天数）
-    const totalDays = Math.ceil((maxDate - minDate) / (1000 * 60 * 60 * 24));
-    
-    // 今天标记已经用起点表示，不需要单独计算位置
-    // todayMarker 已在 CSS 中隐藏
-    
-    // 清除已有的里程碑节点（保留今天标记）
-    const existingNodes = timelineTrack.querySelectorAll('.milestone-node');
-    existingNodes.forEach(function(node) {
-        node.remove();
-    });
-    
-    // 添加里程碑节点
-    activeMilestones.forEach(function(milestone) {
-        // 已完成的里程碑显示在完成日期位置
-        const displayDate = milestone.status === 'completed' && milestone.completedDate 
-            ? milestone.completedDate 
-            : milestone.date;
-        
-        const mDate = new Date(displayDate);
-        const position = ((mDate - minDate) / (maxDate - minDate)) * 100;
-        
-        // 创建节点元素
-        const node = document.createElement('div');
-        node.className = 'milestone-node';
-        if (milestone.status === 'completed') {
-            node.classList.add('completed');
-        } else if (milestone.status === 'cancelled') {
-            node.classList.add('cancelled');
-        }
-        node.style.left = position + '%';
-        
-        node.innerHTML = `
-            <div class="milestone-dot"></div>
-            <div class="milestone-node-label">${escapeHtml(milestone.name)}</div>
-        `;
-        
-        timelineTrack.appendChild(node);
-    });
 }
 
 /**
@@ -873,6 +920,7 @@ function renderMilestones() {
             statusClass = 'cancelled';
             daysText = '已取消';
         } else {
+            // 进行中状态
             if (daysRemaining === 0) {
                 daysText = '🎯 今天截止';
             } else if (daysRemaining > 0) {
@@ -910,6 +958,7 @@ function renderMilestones() {
     milestoneList.innerHTML = html;
 }
 
+
 /**
  * 从 localStorage 加载里程碑数据
  */
@@ -930,32 +979,3 @@ function loadMilestonesFromStorage() {
 function saveMilestonesToStorage() {
     localStorage.setItem('milestones', JSON.stringify(milestones));
 }
-
-// ========================================
-// 工具函数
-// ========================================
-
-/**
- * HTML 转义，防止 XSS 攻击
- * @param {string} text - 要转义的文本
- * @returns {string} 转义后的安全文本
- */
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-/**
- * 格式化日期为中文格式
- * @param {string} dateString - 日期字符串 (YYYY-MM-DD)
- * @returns {string} 格式化后的日期
- */
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return year + '年' + month + '月' + day + '日';
-}
-

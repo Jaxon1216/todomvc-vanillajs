@@ -1,254 +1,350 @@
-/* ========================================
-   CSS 变量定义（方便统一管理颜色和尺寸）
-   ======================================== */
+/* 
+  🎨 TodoMVC 样式文件
+  
+  跟着教程，在这里编写 CSS 样式
+  
+  提示：
+  - df + Tab = display: flex;
+  - m10 + Tab = margin: 10px;
+  - bgc#fff + Tab = background-color: #fff;
+*/
+/* 自定义 */
 :root {
-    /* 主色调 - 低饱和浅天蓝 */
-    --sidebar-bg: #e8f4fc;
-    --sidebar-hover: #d0e8f5;
-    --sidebar-active: #b8dced;
-    
-    /* 背景色 */
-    --main-bg: #ffffff;
-    --card-bg: #ffffff;
-    
-    /* 文字颜色 */
-    --text-primary: #2c3e50;
-    --text-secondary: #7f8c8d;
-    --text-light: #95a5a6;
-    
-    /* 功能色 */
-    --primary-color: #5dade2;
-    --primary-hover: #3498db;
-    --success-color: #58d68d;
-    --warning-color: #f4d03f;
-    --danger-color: #ec7063;
-    
-    /* 边框和阴影 */
-    --border-color: #ecf0f1;
-    --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
-    --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
-    
-    /* 尺寸 */
-    --sidebar-width: 240px;
-    --border-radius: 8px;
-    --border-radius-sm: 4px;
+  /* 主色调 - 低饱和浅天蓝 */
+  --sidebar-bg: #e8f4fc;
+  --sidebar-hover: #d0e8f5;
+  --sidebar-active: #b8dced;
+  
+  /* 背景色 */
+  --main-bg: #ffffff;
+  --card-bg: #ffffff;
+  
+  /* 文字颜色 */
+  --text-primary: #2c3e50;
+  --text-secondary: #7f8c8d;
+  --text-light: #95a5a6;
+  
+  /* 功能色 */
+  --primary-color: #5dade2;
+  --primary-hover: #3498db;
+  --success-color: #58d68d;
+  --warning-color: #f4d03f;
+  --danger-color: #ec7063;
+  
+  /* 边框和阴影 */
+  --border-color: #ecf0f1;
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+  /* 尺寸 */
+  --sidebar-width: 240px;
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
 }
 
-/* ========================================
-   基础样式重置
-   ======================================== */
+
+/* 基础样式 */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
-                 "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    color: var(--text-primary);
-    background-color: var(--main-bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+               "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
 }
 
-/* 去除按钮默认样式 */
 button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
 }
 
-/* 去除输入框默认样式 */
-input {
-    border: none;
-    outline: none;
-    font-family: inherit;
-    font-size: inherit;
-}
+/* 整体布局 */
 
-/* 去除列表默认样式 */
-ul {
-    list-style: none;
-}
-
-/* ========================================
-   整体布局（Flex 左右两栏）
-   ======================================== */
 .app-container {
-    display: flex;
-    min-height: 100vh;
+  display: flex;
+  min-height: 100vh;
 }
 
-/* ========================================
-   左侧侧边栏样式
-   ======================================== */
+/* 侧边栏 */
 .sidebar {
-    width: var(--sidebar-width);
-    background-color: var(--sidebar-bg);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 100;
+  width: var(--sidebar-width);
+  background-color: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
 }
-
 .sidebar-header {
-    padding: 32px 24px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 32px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .logo {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 4px;
+  font-size: 22px;
+  font-weight: 700;
 }
 
 .tagline {
-    font-size: 13px;
-    color: var(--text-secondary);
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
-/* 导航菜单 */
 .nav-menu {
-    flex: 1;
-    padding: 16px 12px;
+  flex: 1;
+  padding: 16px 12px;
 }
 
 .nav-item {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding: 14px 16px;
-    margin-bottom: 6px;
-    border-radius: var(--border-radius);
-    color: var(--text-primary);
-    transition: all 0.2s ease;
-    text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: 6px;
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  transition: background-color 0.2s;
+  text-align: left;
 }
 
 .nav-item:hover {
-    background-color: var(--sidebar-hover);
+  background-color: var(--sidebar-hover);
 }
 
 .nav-item.active {
-    background-color: var(--sidebar-active);
-    font-weight: 600;
+  background-color: var(--sidebar-active);
+  font-weight: 600;
 }
 
 .nav-icon {
-    font-size: 18px;
-    margin-right: 12px;
+  font-size: 18px;
+  margin-right: 12px;
 }
 
-.nav-text {
-    font-size: 15px;
-}
-
-/* 侧边栏底部 */
 .sidebar-footer {
-    padding: 20px 24px;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-    font-size: 12px;
-    color: var(--text-light);
-    text-align: center;
+  padding: 20px 24px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
 }
-
-/* ========================================
-   右侧主内容区样式
-   ======================================== */
+/* 主内容区 */
 .main-content {
-    flex: 1;
-    margin-left: var(--sidebar-width);
-    padding: 40px 48px;
-    background-color: var(--main-bg);
-    min-height: 100vh;
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 40px 48px;
+  background-color: var(--main-bg);
 }
 
-/* 视图页面（默认隐藏） */
 .view {
-    display: none;
-    max-width: 800px;
+  display: none;
 }
 
-/* 激活的视图页面（显示） */
 .view.active {
-    display: block;
+  display: block;
 }
 
-/* 页面头部 */
+
+/* main区域 */
 .view-header {
-    margin-bottom: 32px;
+  margin-bottom: 32px;
 }
 
 .view-header h2 {
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 8px;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 .view-desc {
-    font-size: 14px;
-    color: var(--text-secondary);
+  font-size: 14px;
+  color: var(--text-secondary);
 }
-
-/* ========================================
-   通用按钮样式
-   ======================================== */
+/* 标记 */
+/* 通用按钮样式 */
 .btn {
-    padding: 10px 20px;
-    border-radius: var(--border-radius);
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s ease;
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+/* 标记 */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
 }
 
-.btn-primary {
-    background-color: var(--primary-color);
-    color: white;
-}
 
 .btn-primary:hover {
-    background-color: var(--primary-hover);
+  background-color: #3498db;
 }
 
-.btn-small {
-    padding: 6px 12px;
-    font-size: 12px;
+.todo-input-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
-.btn-danger {
-    background-color: var(--danger-color);
-    color: white;
+.todo-input {
+  flex: 1;
+  padding: 14px 18px;
+  background-color: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
 }
 
-.btn-danger:hover {
-    opacity: 0.9;
+.todo-input:focus {
+  background-color: white;
+  border-color: var(--primary-color);
 }
 
-.btn-secondary {
-    background-color: var(--border-color);
-    color: var(--text-primary);
+.todo-input::placeholder {
+  color: #95a5a6;
 }
 
-.btn-secondary:hover {
-    background-color: #dfe6e9;
+/* 筛选按钮样式 */
+.todo-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background-color: #f8f9fa;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background-color: #ecf0f1;
+}
+
+.filter-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.todo-count {
+  margin-left: auto;
+  font-size: 13px;
+  color: #95a5a6;
 }
 
 /* ========================================
-   空状态提示样式
+   Todo 列表样式
+   ======================================== */
+.todo-list {
+  list-style: none; 
+  /* 标记 */
+  margin-bottom: 20px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: white;
+  border: 1px solid #ecf0f1;
+  border-radius: var(--border-radius);
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+
+.todo-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* 已完成状态 */
+.todo-item.completed {
+  background-color: #f8f9fa;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+/* 标记 */
+  color: #95a5a6;
+}
+
+/* 复选框样式 */
+.todo-checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ecf0f1;
+  border-radius: 50%;
+  margin-right: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.todo-checkbox:hover {
+  border-color: var(--primary-color);
+}
+
+.todo-item.completed .todo-checkbox {
+  background-color: #58d68d;
+  border-color: #58d68d;
+}
+
+.todo-item.completed .todo-checkbox::after {
+  content: "✓";
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+/* 标记 */
+
+
+/* Todo 文本 */
+.todo-text {
+  flex: 1;
+  font-size: 15px;
+  word-break: break-word;
+}
+/* 标记 */
+
+
+/* 删除按钮 */
+.todo-delete {
+  padding: 6px 10px;
+  color: #95a5a6;
+  font-size: 18px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.todo-item:hover .todo-delete {
+  opacity: 1;
+}
+
+/* ========================================
+   空状态提示样式，标记
    ======================================== */
 .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-secondary);
-    display: none;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  display: none;
 }
 
 .empty-state.show {
@@ -262,158 +358,7 @@ ul {
 
 .empty-hint {
     font-size: 14px;
-    color: var(--text-light);
-}
-
-/* ========================================
-   Todo List 页面样式
-   ======================================== */
-
-/* 输入区域 */
-.todo-input-container {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-}
-
-.todo-input {
-    flex: 1;
-    padding: 14px 18px;
-    background-color: #f8f9fa;
-    border: 2px solid transparent;
-    border-radius: var(--border-radius);
-    font-size: 15px;
-    transition: all 0.2s ease;
-}
-
-.todo-input:focus {
-    background-color: white;
-    border-color: var(--primary-color);
-}
-
-.todo-input::placeholder {
-    color: var(--text-light);
-}
-
-/* 筛选按钮组 */
-.todo-filters {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.filter-btn {
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 13px;
-    color: var(--text-secondary);
-    background-color: #f8f9fa;
-    transition: all 0.2s ease;
-}
-
-.filter-btn:hover {
-    background-color: var(--border-color);
-}
-
-.filter-btn.active {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.todo-count {
-    margin-left: auto;
-    font-size: 13px;
-    color: var(--text-light);
-}
-
-/* Todo 列表 */
-.todo-list {
-    margin-bottom: 20px;
-}
-
-.todo-item {
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    margin-bottom: 10px;
-    transition: all 0.2s ease;
-}
-
-.todo-item:hover {
-    box-shadow: var(--shadow-light);
-}
-
-.todo-item.completed {
-    background-color: #f8f9fa;
-}
-
-.todo-item.completed .todo-text {
-    text-decoration: line-through;
-    color: var(--text-light);
-}
-
-/* 复选框样式 */
-.todo-checkbox {
-    width: 22px;
-    height: 22px;
-    border: 2px solid var(--border-color);
-    border-radius: 50%;
-    margin-right: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-}
-
-.todo-checkbox:hover {
-    border-color: var(--primary-color);
-}
-
-.todo-item.completed .todo-checkbox {
-    background-color: var(--success-color);
-    border-color: var(--success-color);
-}
-
-.todo-item.completed .todo-checkbox::after {
-    content: "✓";
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-/* Todo 文本 */
-.todo-text {
-    flex: 1;
-    font-size: 15px;
-    color: var(--text-primary);
-    word-break: break-word;
-}
-
-/* 删除按钮 */
-.todo-delete {
-    padding: 6px 10px;
-    color: var(--text-light);
-    font-size: 18px;
-    border-radius: var(--border-radius-sm);
-    opacity: 0;
-    transition: all 0.2s ease;
-}
-
-.todo-item:hover .todo-delete {
-    opacity: 1;
-}
-
-.todo-delete:hover {
-    background-color: #fee;
-    color: var(--danger-color);
+    color: #95a5a6;
 }
 
 /* ========================================
@@ -421,105 +366,128 @@ ul {
    ======================================== */
 
 /* 输入区域 */
+
 .countdown-input-container {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
 }
 
 .countdown-input {
-    padding: 14px 18px;
-    background-color: #f8f9fa;
-    border: 2px solid transparent;
-    border-radius: var(--border-radius);
-    font-size: 15px;
-    transition: all 0.2s ease;
+  padding: 14px 18px;
+  background-color: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
 }
 
+
 .countdown-input:first-child {
-    flex: 1;
-    min-width: 200px;
+  flex: 1;
+  min-width: 200px;
 }
 
 .countdown-date {
-    width: 180px;
+  width: 180px;
 }
 
 .countdown-input:focus {
-    background-color: white;
-    border-color: var(--primary-color);
+  background-color: white;
+  border-color: #5dade2;
 }
 
 /* 倒数日列表 */
 .countdown-list {
-    display: grid;
-    gap: 16px;
+  display: grid;
+  gap: 16px;
 }
+/* grid布局，标记 */
 
 /* 倒数日卡片 */
 .countdown-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: all 0.2s ease;
+  background-color: white;
+  border: 1px solid #ecf0f1;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s;
 }
 
+
 .countdown-card:hover {
-    box-shadow: var(--shadow-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .countdown-info {
-    flex: 1;
+  flex: 1;
 }
 
 .countdown-name {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 6px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 6px;
 }
 
 .countdown-date-display {
-    font-size: 13px;
-    color: var(--text-secondary);
+  font-size: 13px;
+  color: #7f8c8d;
 }
 
 .countdown-days {
-    text-align: center;
-    padding: 0 24px;
+  text-align: center;
+  padding: 0 24px;
 }
 
 .countdown-number {
-    font-size: 42px;
-    font-weight: 700;
-    color: var(--primary-color);
-    line-height: 1;
+  font-size: 42px;
+  font-weight: 700;
+  color: #5dade2;
+  line-height: 1;
 }
 
 .countdown-label {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-top: 4px;
+  font-size: 13px;
+  color: #7f8c8d;
+  margin-top: 4px;
 }
 
+/* 已过期状态 */
 .countdown-card.past .countdown-number {
-    color: var(--text-light);
+  color: #95a5a6;
 }
 
+/* 今天状态 */
 .countdown-card.today .countdown-number {
-    color: var(--success-color);
+  color: #58d68d;
 }
 
-/* 倒数日操作按钮 */
+/* 操作按钮 */
 .countdown-actions {
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
 }
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-danger {
+  background-color: #ec7063;
+  color: white;
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+}
+
+
 
 /* ========================================
    路线图 / 时间轴页面样式
@@ -527,211 +495,174 @@ ul {
 
 /* 输入区域 */
 .timeline-input-container {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
 }
 
 .timeline-input {
-    padding: 14px 18px;
-    background-color: #f8f9fa;
-    border: 2px solid transparent;
-    border-radius: var(--border-radius);
-    font-size: 15px;
-    transition: all 0.2s ease;
+  padding: 14px 18px;
+  background-color: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
 }
 
 .timeline-input:first-child {
-    flex: 1;
-    min-width: 200px;
+  flex: 1;
+  min-width: 200px;
 }
 
 .timeline-date {
-    width: 180px;
+  width: 180px;
 }
 
 .timeline-input:focus {
-    background-color: white;
-    border-color: var(--primary-color);
+  background-color: white;
+  border-color: #5dade2;
 }
 
 /* 时间轴容器 */
 .timeline-container {
-    position: relative;
-    padding: 40px 20px 40px 60px;
-    margin-bottom: 40px;
-    background-color: #f8f9fa;
-    border-radius: var(--border-radius);
-    min-height: 120px;
-    display: none;
+  position: relative;            /* 让子元素可以使用绝对定位 */
+  padding: 40px 20px 40px 60px;  /* 上右下左的内边距 */
+  margin-bottom: 40px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  min-height: 120px;
+  display: block;                 /* 默认隐藏，有数据时显示 */
 }
 
+
 .timeline-container.show {
-    display: block;
+  display: block;
 }
 
 /* 时间轴起点 */
 .timeline-start {
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    /* transform: translateY(-50%); */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  /* transform: translateY(-50%);  */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .timeline-start-dot {
-    width: 14px;
-    height: 14px;
-    background-color: var(--danger-color);  /* 改成红色，表示今天 */
-    border: 2px solid white;
-    box-shadow: 0 2px 6px rgba(231, 76, 60, 0.3);
-    border-radius: 50%;
-    margin-top: -7px;  /* 调整偏移量 */
+  width: 14px;
+  height: 14px;
+  background-color: #ec7063;     /* 红色，突出"今天" */
+  border: 2px solid white;       /* 白色边框 */
+  box-shadow: 0 2px 6px rgba(231, 76, 60, 0.3);  /* 阴影 */
+  border-radius: 50%;            /* 圆形 */
+  margin-top: -7px;              /* 向上偏移，对齐轨道中心 */
 }
 
 .timeline-start-label {
-    font-size: 11px;
-    color: var(--danger-color);  /* 改成红色 */
-    font-weight: 600;
-    margin-top: 10px;
+  font-size: 11px;
+  color: #ec7063;                /* 红色 */
+  font-weight: 600;              /* 加粗 */
+  margin-top: 10px;              /* 与圆点拉开距离 */
 }
 
-/* 时间轴轨道 */
+/* 时间轴轨道（横线） */
 .timeline-track {
-    position: relative;
-    height: 4px;
-    background-color: var(--border-color);
-    border-radius: 2px;
-    margin-top: 20px;
+  position: relative;
+  height: 4px;                   /* 轨道高度 */
+  background-color: #7b7b7b;     /* 轨道颜色 */
+  border-radius: 2px;
+  margin-top: 20px;
 }
 
-/* 今天标记（已废弃，现在用起点表示今天）*/
 .today-marker {
-    display: none;  /* 隐藏原来的今天标记 */
-    position: absolute;
-    top: -30px;
-    transform: translateX(-50%);
-    flex-direction: column;
-    align-items: center;
-    z-index: 10;
+  display: none;  /* 隐藏 */
 }
 
-.today-marker::after {
-    content: "";
-    width: 3px;
-    height: 50px;
-    background-color: var(--danger-color);
-    border-radius: 2px;
-}
-
-.today-label {
-    font-size: 11px;
-    color: var(--danger-color);
-    font-weight: 600;
-    white-space: nowrap;
-    background-color: #fff;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-bottom: 4px;
-}
-
-/* 里程碑节点 */
 .milestone-node {
-    position: absolute;
-    top: -8px;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    z-index: 5;
+  position: absolute;
+  /* 标记 */
+  top: -8px;                     /* 在轨道上方一点 */
+  transform: translateX(-50%);   /* 水平居中 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 5;
 }
 
+/* 节点圆点 */
 .milestone-dot {
-    width: 20px;
-    height: 20px;
-    background-color: var(--primary-color);
-    border: 3px solid white;
-    border-radius: 50%;
-    box-shadow: var(--shadow-light);
-    transition: all 0.2s ease;
+  width: 20px;
+  height: 20px;
+  background-color: #5dade2;     /* 主色调蓝色 */
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
 }
 
 .milestone-node:hover .milestone-dot {
-    transform: scale(1.2);
-}
-
-.milestone-node.completed .milestone-dot {
-    background-color: var(--success-color);
-}
-
-.milestone-node.cancelled .milestone-dot {
-    background-color: var(--text-light);
-}
-
-.milestone-node-label {
-    font-size: 11px;
-    color: var(--text-secondary);
-    margin-top: 8px;
-    white-space: nowrap;
-    max-width: 80px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
+  transform: scale(1.2);         /* 悬停时放大 */
 }
 
 /* 里程碑卡片列表 */
 .milestone-list {
-    display: grid;
-    gap: 12px;
+  display: grid;
+  gap: 12px;
 }
 
 /* 里程碑卡片 */
 .milestone-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    transition: all 0.2s ease;
+  background-color: white;
+  border: 1px solid #ecf0f1;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s;
 }
 
 .milestone-card:hover {
-    box-shadow: var(--shadow-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+/* 已完成状态 */
 .milestone-card.completed {
-    background-color: #f0fff4;
-    border-color: #c6f6d5;
+  background-color: #f0fff4;     /* 浅绿色背景 */
+  border-color: #c6f6d5;
 }
 
+/* 已取消状态 */
 .milestone-card.cancelled {
-    background-color: #f8f9fa;
-    opacity: 0.7;
+  background-color: #f8f9fa;
+  opacity: 0.7;
 }
 
-/* 状态指示器 */
+/* 状态指示器（小圆点） */
 .milestone-status-indicator {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #5dade2;
+  flex-shrink: 0;
 }
+
 
 .milestone-card.completed .milestone-status-indicator {
-    background-color: var(--success-color);
+    background-color: #58d68d;
 }
 
 .milestone-card.cancelled .milestone-status-indicator {
-    background-color: var(--text-light);
+    background-color: #95a5a6;
 }
 
+/* 里程碑信息 */
 .milestone-info {
     flex: 1;
 }
@@ -739,116 +670,49 @@ ul {
 .milestone-name {
     font-size: 16px;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #2c3e50;
     margin-bottom: 4px;
 }
 
 .milestone-card.cancelled .milestone-name {
     text-decoration: line-through;
-    color: var(--text-light);
+    color: #95a5a6;
 }
 
 .milestone-date-display {
     font-size: 13px;
-    color: var(--text-secondary);
+    color: #7f8c8d;
 }
 
 .milestone-days-left {
     font-size: 14px;
-    color: var(--primary-color);
+    color: #5dade2;
     font-weight: 500;
 }
 
 .milestone-card.completed .milestone-days-left {
-    color: var(--success-color);
+    color: #58d68d;
 }
 
-/* 里程碑操作按钮 */
+/* 操作区域 */
 .milestone-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 /* 状态选择下拉框 */
 .status-select {
-    padding: 6px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-sm);
-    font-size: 12px;
-    background-color: white;
-    color: var(--text-primary);
-    cursor: pointer;
+  padding: 6px 12px;
+  border: 1px solid #ecf0f1;
+  border-radius: 4px;
+  font-size: 12px;
+  background-color: white;
+  color: #2c3e50;
+  cursor: pointer;
 }
 
 .status-select:focus {
-    outline: none;
-    border-color: var(--primary-color);
+  outline: none;
+  border-color: #5dade2;
 }
-
-/* ========================================
-   响应式设计
-   ======================================== */
-@media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        flex-direction: row;
-        align-items: center;
-        padding: 12px;
-    }
-    
-    .sidebar-header {
-        padding: 0 16px;
-        border-bottom: none;
-    }
-    
-    .tagline {
-        display: none;
-    }
-    
-    .nav-menu {
-        display: flex;
-        padding: 0;
-        gap: 8px;
-    }
-    
-    .nav-item {
-        padding: 10px 14px;
-        margin-bottom: 0;
-    }
-    
-    .nav-text {
-        display: none;
-    }
-    
-    .nav-icon {
-        margin-right: 0;
-    }
-    
-    .sidebar-footer {
-        display: none;
-    }
-    
-    .main-content {
-        margin-left: 0;
-        padding: 24px;
-    }
-    
-    .app-container {
-        flex-direction: column;
-    }
-    
-    .todo-input-container,
-    .countdown-input-container,
-    .timeline-input-container {
-        flex-direction: column;
-    }
-    
-    .countdown-date,
-    .timeline-date {
-        width: 100%;
-    }
-}
-
