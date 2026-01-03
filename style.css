@@ -716,3 +716,254 @@ button {
   outline: none;
   border-color: #5dade2;
 }
+
+/* ========================================
+   响应式布局
+   ======================================== */
+
+/* 平板（768px以下）：侧边栏收窄 */
+@media (max-width: 768px) {
+  /* 调整侧边栏宽度变量 */
+  :root {
+    --sidebar-width: 60px;
+  }
+  
+  /* 侧边栏宽度 */
+  .sidebar {
+    width: var(--sidebar-width);
+  }
+  
+  /* 侧边栏header缩小 */
+  .sidebar-header {
+    padding: 20px 8px;
+  }
+  
+  /* Logo只显示emoji */
+  .logo {
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  /* 隐藏副标题 */
+  .tagline {
+    display: none;
+  }
+  
+  /* 导航按钮纵向排列，图标和文字上下排列 */
+  .nav-item {
+    flex-direction: column;
+    padding: 12px 8px;
+    font-size: 20px;
+  }
+  
+  /* 图标不需要右边距 */
+  .nav-icon {
+    margin-right: 0;
+  }
+  
+  /* 文字变小 */
+  .nav-text {
+    font-size: 10px;
+    margin-top: 4px;
+  }
+  
+  /* 隐藏底部 */
+  .sidebar-footer {
+    display: none;
+  }
+  
+  /* 主内容区左边距调整 */
+  .main-content {
+    margin-left: var(--sidebar-width);
+    padding: 24px 16px;
+  }
+  
+  /* 标题字号缩小 */
+  .view-header h2 {
+    font-size: 24px;
+  }
+}
+
+/* 手机（480px以下）：侧边栏变顶部导航 */
+@media (max-width: 480px) {
+  /* 侧边栏宽度设为0 */
+  :root {
+    --sidebar-width: 0px;
+  }
+  
+  /* 容器改为纵向布局 */
+  .app-container {
+    flex-direction: column;
+  }
+  
+  /* 侧边栏变横向导航 */
+  .sidebar {
+    width: 100%;              /* 全宽 */
+    height: auto;             /* 高度自适应 */
+    position: relative;       /* 不再固定定位 */
+    flex-direction: row;      /* 横向排列 */
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  /* Logo区域 */
+  .sidebar-header {
+    padding: 0 16px;
+    border: none;
+  }
+  
+  .logo {
+    font-size: 20px;
+  }
+  
+  /* 导航横向排列 */
+  .nav-menu {
+    display: flex;
+    flex-direction: row;      /* 横向 */
+    gap: 8px;
+    flex: 1;                  /* 占据剩余空间 */
+    justify-content: center;  /* 居中对齐 */
+  }
+  
+  /* 导航按钮 */
+  .nav-item {
+    padding: 8px 12px;
+    margin: 0;
+    border-radius: 20px;      /* 圆角胶囊形状 */
+  }
+  
+  /* 隐藏文字，只显示图标 */
+  .nav-text {
+    display: none;
+  }
+  
+  /* 图标大小 */
+  .nav-icon {
+    font-size: 20px;
+  }
+  
+  /* 主内容区 */
+  .main-content {
+    margin-left: 0;           /* 不需要左边距了 */
+    padding: 20px 16px;
+  }
+  
+  /* 标题进一步缩小 */
+  .view-header h2 {
+    font-size: 22px;
+  }
+  
+  /* 描述文字缩小 */
+  .view-desc {
+    font-size: 13px;
+  }
+  
+  /* 输入框容器改为纵向 */
+  .todo-input-container,
+  .countdown-input-container,
+  .timeline-input-container {
+    flex-direction: column;
+  }
+  
+  /* 输入框全宽 */
+  .todo-input,
+  .countdown-input,
+  .timeline-input {
+    width: 100% !important;
+    min-width: 0;
+  }
+  
+  /* 日期输入框全宽 */
+  .countdown-date,
+  .timeline-date {
+    width: 100%;
+  }
+  
+  /* 卡片内容换行 */
+  .todo-item,
+  .countdown-card,
+  .milestone-card {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  /* 倒数日卡片的数字区域 */
+  .countdown-days {
+    padding: 0 16px;
+  }
+  
+  .countdown-number {
+    font-size: 32px;
+  }
+  
+  /* 时间轴改为横向滚动 */
+  .timeline-container {
+    overflow-x: auto;           /* 允许横向滚动 */
+    overflow-y: hidden;
+    padding: 20px 10px;
+    min-height: 100px;
+    -webkit-overflow-scrolling: touch;  /* iOS 平滑滚动 */
+  }
+  
+  /* 时间轴轨道设置最小宽度 */
+  .timeline-track {
+    min-width: 600px;           /* 确保有足够宽度展示 */
+  }
+  
+  /* 起点标记在手机上隐藏（节省空间） */
+  .timeline-start {
+    display: none;
+  }
+  
+  /* 里程碑节点在小屏幕调整 */
+  .milestone-node {
+    transform: translateX(-50%) scale(0.9);  /* 稍微缩小 */
+  }
+  
+  .milestone-node-label {
+    font-size: 10px;            /* 字号缩小 */
+    max-width: 60px;            /* 标签宽度限制 */
+  }
+  
+  .milestone-dot {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+  }
+  
+  /* 里程碑操作按钮 */
+  .milestone-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* 极小屏幕（360px以下）：进一步优化 */
+@media (max-width: 360px) {
+  /* 主内容区进一步减小边距 */
+  .main-content {
+    padding: 16px 12px;
+  }
+  
+  /* 标题再缩小 */
+  .view-header h2 {
+    font-size: 20px;
+  }
+  
+  /* 按钮缩小 */
+  .btn {
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+  
+  /* 倒数日卡片改为纵向 */
+  .countdown-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .countdown-days {
+    padding: 16px 0;
+  }
+}
