@@ -529,22 +529,16 @@ button {
 
 /* 删除按钮 */
 .todo-delete {
-    padding: 6px 10px;
-    color: #95a5a6;
-    font-size: 18px;
+    padding: 6px 12px;
+    font-size: 12px;
+    background-color: #ec7063;
+    color: white;
     border-radius: 4px;
-    opacity: 0;
     transition: all 0.2s;
 }
 
-.todo-item:hover .todo-delete {
-    opacity: 1;
-}
-/* 标记 */
-
 .todo-delete:hover {
-    background-color: #fee;
-    color: #ec7063;
+    opacity: 0.9;
 }
 
 /* ========================================
@@ -701,7 +695,7 @@ function renderTodos() {
             <li class="todo-item" data-id="${todo.id}">
                 <div class="todo-checkbox"></div>
                 <span class="todo-text">${todo.text}</span>
-                <button class="todo-delete">×</button>
+                <button class="todo-delete">删除</button>
             </li>
         `;
     });
@@ -887,7 +881,7 @@ todos.forEach(function(todo) {
         <li class="todo-item ${completedClass}" data-id="${todo.id}">
             <div class="todo-checkbox"></div>
             <span class="todo-text">${todo.text}</span>
-            <button class="todo-delete">×</button>
+            <button class="todo-delete">删除</button>
         </li>
     `;
 });
@@ -989,7 +983,7 @@ function renderTodos() {
             <li class="todo-item ${completedClass}" data-id="${todo.id}">
                 <div class="todo-checkbox"></div>
                 <span class="todo-text">${todo.text}</span>
-                <button class="todo-delete">×</button>
+                <button class="todo-delete">删除</button>
             </li>
         `;
     });
@@ -1123,7 +1117,7 @@ html += `
     <li class="todo-item ${completedClass}" data-id="${todo.id}">
         <div class="todo-checkbox"></div>
         <span class="todo-text">${escapeHtml(todo.text)}</span>
-        <button class="todo-delete">×</button>
+        <button class="todo-delete">删除</button>
     </li>
 `;
 ```

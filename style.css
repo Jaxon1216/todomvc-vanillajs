@@ -325,16 +325,16 @@ button {
 
 /* 删除按钮 */
 .todo-delete {
-  padding: 6px 10px;
-  color: #95a5a6;
-  font-size: 18px;
+  padding: 6px 12px;
+  font-size: 12px;
+  background-color: #ec7063;
+  color: white;
   border-radius: 4px;
-  opacity: 0;
   transition: all 0.2s;
 }
 
-.todo-item:hover .todo-delete {
-  opacity: 1;
+.todo-delete:hover {
+  opacity: 0.9;
 }
 
 /* ========================================

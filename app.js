@@ -216,7 +216,7 @@ function renderTodos() {
             <li class="todo-item ${completedClass}" data-id="${todo.id}">
                 <div class="todo-checkbox"></div>
                 <span class="todo-text">${todo.text}</span>
-                <button class="todo-delete">×</button>
+                <button class="todo-delete">删除</button>
             </li>
         `;
     });
