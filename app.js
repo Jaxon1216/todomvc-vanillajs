@@ -399,18 +399,6 @@ function addCountdown() {
     renderCountdowns();
 }
 
-/**
- * 删除倒数日
- * @param {number} id - 倒数日的 ID
- */
-function deleteCountdown(id) {
-    countdowns = countdowns.filter(function(item) {
-        return item.id !== id;
-    });
-    
-    saveCountdownsToStorage();
-    renderCountdowns();
-}
 
 /**
  * 更新倒数日的日期
@@ -743,9 +731,9 @@ function renderTimeline() {
     const timelineTrack = document.getElementById('timeline-track');
     const todayMarker = document.getElementById('today-marker');
     
-    // 过滤出未取消的里程碑
+    // 只显示进行中的里程碑（已完成和已取消的不在时间轴显示）
     const activeMilestones = milestones.filter(function(m) {
-        return m.status !== 'cancelled';
+        return m.status === 'pending';
     });
     
     // 如果没有里程碑，隐藏时间轴
@@ -762,26 +750,25 @@ function renderTimeline() {
     today.setHours(0, 0, 0, 0);
     
     // 找出所有日期，确定时间轴范围
+    // minDate 就是今天（时间轴从今天开始）
     let minDate = new Date(today);
     let maxDate = new Date(today);
     maxDate.setDate(maxDate.getDate() + 30); // 默认至少显示30天
     
     activeMilestones.forEach(function(m) {
-        const mDate = new Date(m.status === 'completed' && m.completedDate ? m.completedDate : m.date);
-        if (mDate < minDate) minDate = new Date(mDate);
+        const mDate = new Date(m.date);
+        // 只考虑未来的里程碑来扩展时间轴
         if (mDate > maxDate) maxDate = new Date(mDate);
     });
     
-    // 在两端各加一些余量
-    minDate.setDate(minDate.getDate() - 7);
+    // 在右端加一些余量（左端不需要，因为从今天开始）
     maxDate.setDate(maxDate.getDate() + 14);
     
     // 计算总时间跨度（天数）
     const totalDays = Math.ceil((maxDate - minDate) / (1000 * 60 * 60 * 24));
     
-    // 计算今天在时间轴上的位置（百分比）
-    const todayPosition = ((today - minDate) / (maxDate - minDate)) * 100;
-    todayMarker.style.left = todayPosition + '%';
+    // 今天标记已经用起点表示，不需要单独计算位置
+    // todayMarker 已在 CSS 中隐藏
     
     // 清除已有的里程碑节点（保留今天标记）
     const existingNodes = timelineTrack.querySelectorAll('.milestone-node');
@@ -835,14 +822,40 @@ function renderMilestones() {
     // 隐藏空状态
     timelineEmpty.classList.remove('show');
     
-    // 按日期排序
+    // 按状态和日期双重排序（进行中在上，已完成在下）
     const sortedMilestones = [...milestones].sort(function(a, b) {
+        // 第一优先级：未完成的排前面
+        if (a.status === 'pending' && b.status !== 'pending') return -1;
+        if (a.status !== 'pending' && b.status === 'pending') return 1;
+        
+        // 第二优先级：同状态按日期排
         return new Date(a.date) - new Date(b.date);
     });
     
     // 生成 HTML
     let html = '';
-    sortedMilestones.forEach(function(milestone) {
+    sortedMilestones.forEach(function(milestone, index) {
+        // 在第一个非进行中的卡片前插入分隔线
+        if (index > 0 && 
+            sortedMilestones[index - 1].status === 'pending' && 
+            milestone.status !== 'pending') {
+            const completedCount = milestones.filter(m => m.status === 'completed').length;
+            html += `
+                <div style="
+                    margin: 24px 0;
+                    padding: 12px;
+                    background: #f0fff4;
+                    border: 1px solid #c6f6d5;
+                    border-radius: 8px;
+                    text-align: center;
+                    color: #38a169;
+                    font-size: 13px;
+                    font-weight: 500;
+                ">
+                    ✅ 已完成的里程碑 (${completedCount})
+                </div>
+            `;
+        }
         const daysRemaining = calculateDaysRemaining(milestone.date);
         const formattedDate = formatDate(milestone.date);
         

@@ -82,18 +82,14 @@
     
     <!-- 时间轴容器 -->
     <div class="timeline-container" id="timeline-container">
-        <!-- 时间轴起点标记 -->
+        <!-- 时间轴起点标记（今天）-->
         <div class="timeline-start">
             <span class="timeline-start-dot"></span>
-            <span class="timeline-start-label">起点</span>
+            <span class="timeline-start-label">今天</span>
         </div>
         
         <!-- 时间轴主体 -->
         <div class="timeline-track" id="timeline-track">
-            <!-- 当天标记线 -->
-            <div class="today-marker" id="today-marker">
-                <span class="today-label">今天</span>
-            </div>
             <!-- 里程碑节点会通过 JS 动态添加到这里 -->
         </div>
     </div>
@@ -113,9 +109,11 @@
 
 > 💡 **结构说明**
 > - `timeline-container`：整个时间轴的容器
+> - `timeline-start`：时间轴起点，用红色圆点表示"今天"
 > - `timeline-track`：时间轴的"轨道"（一条横线）
-> - `today-marker`：标记今天位置的红色线
 > - `milestone-list`：下方的卡片列表，显示详细信息
+> 
+> **设计理念**：时间轴从今天开始，往右延伸到未来，专注于当前和未来的目标
 
 ---
 
@@ -180,33 +178,41 @@
 > - `position: relative`：相对定位，为子元素的绝对定位提供参考点
 > - `position: absolute`：绝对定位，可以用 `left`、`top` 精确控制位置
 
-### 2.2 时间轴起点样式
+### 2.2 时间轴起点样式（今天标记）
 
 ```css
-/* 时间轴起点 */
+/* 时间轴起点（今天）*/
 .timeline-start {
     position: absolute;
     left: 20px;
     top: 50%;
-    transform: translateY(-50%);   /* 垂直居中 */
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .timeline-start-dot {
-    width: 12px;
-    height: 12px;
-    background-color: #95a5a6;
+    width: 14px;
+    height: 14px;
+    background-color: #ec7063;     /* 红色，突出"今天" */
+    border: 2px solid white;       /* 白色边框 */
+    box-shadow: 0 2px 6px rgba(231, 76, 60, 0.3);  /* 阴影 */
     border-radius: 50%;            /* 圆形 */
+    margin-top: -7px;              /* 向上偏移，对齐轨道中心 */
 }
 
 .timeline-start-label {
     font-size: 11px;
-    color: #95a5a6;
-    margin-top: 4px;
+    color: #ec7063;                /* 红色 */
+    font-weight: 600;              /* 加粗 */
+    margin-top: 10px;              /* 与圆点拉开距离 */
 }
 ```
+
+> 💡 **设计说明**
+> - 起点圆点用红色表示"今天"，更醒目
+> - `margin-top: -7px` 让圆点精准对齐时间轴轨道
+> - 时间轴从今天开始，不再显示过去的时间
 
 ### 2.3 时间轴轨道样式
 
@@ -221,49 +227,22 @@
 }
 ```
 
-### 2.4 今天标记样式
+### 2.4 今天标记样式（已废弃）
 
-```css
-/* 今天标记 */
-.today-marker {
-    position: absolute;
-    top: -30px;                    /* 在轨道上方 */
-    transform: translateX(-50%);   /* 水平居中对齐 */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 10;                   /* 确保在最上层 */
-}
-
-/* 红色竖线 */
-.today-marker::after {
-    content: "";
-    width: 3px;
-    height: 50px;
-    background-color: #ec7063;     /* 红色 */
-    border-radius: 2px;
-}
-
-.today-label {
-    font-size: 11px;
-    color: #ec7063;
-    font-weight: 600;
-    white-space: nowrap;
-    background-color: #fff;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-bottom: 4px;
-}
-```
-
-> 💡 **::after 伪元素**
+> 💡 **设计优化**
+> 
+> 原本设计中有一个单独的"今天标记"（红色竖线），但这会导致起点到今天之间有一段空白区域。
+> 
+> **优化方案**：直接把起点当成"今天"，时间轴从今天开始往右延伸到未来。
+> 
+> 如果你的代码中还有 `.today-marker` 的 HTML 结构，可以删除或保留（CSS 中已隐藏）：
+> 
 > ```css
-> .element::after {
->     content: "";  /* 必须有 content，即使是空的 */
->     /* 其他样式 */
+> /* 今天标记（已废弃，现在用起点表示今天）*/
+> .today-marker {
+>     display: none;  /* 隐藏 */
 > }
 > ```
-> 伪元素可以在元素内部创建额外的内容，这里用来画红色竖线。
 
 ### 2.5 里程碑节点样式
 
@@ -565,9 +544,9 @@ function renderTimeline() {
     const timelineTrack = document.getElementById('timeline-track');
     const todayMarker = document.getElementById('today-marker');
     
-    // 过滤出未取消的里程碑（取消的不显示在时间轴上）
+    // 只显示进行中的里程碑（已完成和已取消的不在时间轴显示）
     const activeMilestones = milestones.filter(function(m) {
-        return m.status !== 'cancelled';
+        return m.status === 'pending';
     });
     
     // 如果没有活跃的里程碑，隐藏时间轴
@@ -584,28 +563,21 @@ function renderTimeline() {
     today.setHours(0, 0, 0, 0);
     
     // 找出所有日期的最小值和最大值
+    // minDate 就是今天（时间轴从今天开始）
     let minDate = new Date(today);
     let maxDate = new Date(today);
     maxDate.setDate(maxDate.getDate() + 30);  // 默认至少显示30天
     
     activeMilestones.forEach(function(m) {
-        // 已完成的显示在完成日期位置
-        const displayDate = m.status === 'completed' && m.completedDate 
-            ? m.completedDate 
-            : m.date;
-        const mDate = new Date(displayDate);
-        
-        if (mDate < minDate) minDate = new Date(mDate);
+        const mDate = new Date(m.date);
+        // 只考虑未来的里程碑来扩展时间轴
         if (mDate > maxDate) maxDate = new Date(mDate);
     });
     
-    // 在两端各加一些余量，让显示更美观
-    minDate.setDate(minDate.getDate() - 7);
+    // 在右端加一些余量（左端不需要，因为从今天开始）
     maxDate.setDate(maxDate.getDate() + 14);
     
-    // 计算今天在时间轴上的位置（百分比）
-    const todayPosition = ((today - minDate) / (maxDate - minDate)) * 100;
-    todayMarker.style.left = todayPosition + '%';
+    // 今天标记已经用起点表示，不需要单独计算位置
     
     // 清除已有的里程碑节点（保留今天标记）
     const existingNodes = timelineTrack.querySelectorAll('.milestone-node');
@@ -615,12 +587,7 @@ function renderTimeline() {
     
     // 添加里程碑节点
     activeMilestones.forEach(function(milestone) {
-        // 已完成的里程碑显示在完成日期位置
-        const displayDate = milestone.status === 'completed' && milestone.completedDate 
-            ? milestone.completedDate 
-            : milestone.date;
-        
-        const mDate = new Date(displayDate);
+        const mDate = new Date(milestone.date);
         const position = ((mDate - minDate) / (maxDate - minDate)) * 100;
         
         // 创建节点元素
@@ -735,10 +702,14 @@ function updateMilestoneStatus(id, newStatus) {
 }
 ```
 
-> 💡 **关键逻辑：完成日期**
+> 💡 **设计优化：已完成的里程碑**
 > 
-> 当用户将里程碑标记为"已完成"时，我们记录当天作为完成日期。
-> 这样在时间轴上，已完成的里程碑会显示在它实际完成的位置，而不是原定的截止日期。
+> 为了保持时间轴的清爽和专注未来，我们采用了以下策略：
+> - **时间轴**：只显示进行中的里程碑（蓝色圆点）
+> - **卡片列表**：显示所有里程碑，进行中的在上，已完成的在下
+> - **分隔线**：在进行中和已完成之间自动添加绿色分隔条
+> 
+> 这样既不丢失已完成的记录，又让时间轴更加直观。
 
 ### 5.3 实现删除函数
 
@@ -806,14 +777,40 @@ function renderMilestones() {
     // 隐藏空状态
     timelineEmpty.classList.remove('show');
     
-    // 按日期排序
+    // 按状态和日期双重排序（进行中在上，已完成在下）
     const sortedMilestones = [...milestones].sort(function(a, b) {
+        // 第一优先级：未完成的排前面
+        if (a.status === 'pending' && b.status !== 'pending') return -1;
+        if (a.status !== 'pending' && b.status === 'pending') return 1;
+        
+        // 第二优先级：同状态按日期排
         return new Date(a.date) - new Date(b.date);
     });
     
     // 生成 HTML
     let html = '';
-    sortedMilestones.forEach(function(milestone) {
+    sortedMilestones.forEach(function(milestone, index) {
+        // 在第一个非进行中的卡片前插入分隔线
+        if (index > 0 && 
+            sortedMilestones[index - 1].status === 'pending' && 
+            milestone.status !== 'pending') {
+            const completedCount = milestones.filter(m => m.status === 'completed').length;
+            html += `
+                <div style="
+                    margin: 24px 0;
+                    padding: 12px;
+                    background: #f0fff4;
+                    border: 1px solid #c6f6d5;
+                    border-radius: 8px;
+                    text-align: center;
+                    color: #38a169;
+                    font-size: 13px;
+                    font-weight: 500;
+                ">
+                    ✅ 已完成的里程碑 (${completedCount})
+                </div>
+            `;
+        }
         const daysRemaining = calculateDaysRemaining(milestone.date);
         const formattedDate = formatDate(milestone.date);
         
@@ -904,11 +901,11 @@ function saveMilestonesToStorage() {
 1. 点击侧边栏"路线图"切换到路线图页面
 2. 添加几个不同日期的目标
 3. 验证：
-   - ✅ 时间轴出现，里程碑节点按日期分布
-   - ✅ 红色"今天"标记显示在正确位置
+   - ✅ 时间轴出现，左侧红色圆点表示"今天"
+   - ✅ 蓝色里程碑节点按日期从左到右分布
    - ✅ 修改日期后，节点位置自动更新
-   - ✅ 将目标标记为"已完成"，节点变绿
-   - ✅ 将目标标记为"已取消"，节点从时间轴消失
+   - ✅ 将目标标记为"已完成"，节点从时间轴消失，在卡片列表下方显示
+   - ✅ 进行中和已完成之间有绿色分隔条
    - ✅ 刷新页面，数据保持
 
 ### 7.2 常见问题处理
@@ -931,14 +928,20 @@ position = Math.max(0, Math.min(100, position));  // 限制在 0-100
 
 **处理思路**：可以添加偏移量，或者使用堆叠显示
 
-#### 问题3：已完成目标位置不对
+#### 问题3：时间轴与卡片列表不一致
 
-**检查**：确保 `completedDate` 正确保存，且渲染时使用了正确的日期：
+**原因**：已完成的里程碑不会显示在时间轴上
 
+**这是设计特性**：
+- 时间轴：专注未来，只显示进行中的目标
+- 卡片列表：显示所有目标，按状态分组
+
+如果你想在时间轴上也显示已完成的，可以修改过滤条件：
 ```javascript
-const displayDate = milestone.status === 'completed' && milestone.completedDate 
-    ? milestone.completedDate  // 使用完成日期
-    : milestone.date;          // 使用原定日期
+// 改为显示所有未取消的
+const activeMilestones = milestones.filter(function(m) {
+    return m.status !== 'cancelled';
+});
 ```
 
 ---

@@ -486,3 +486,233 @@ button {
 .btn-danger:hover {
   opacity: 0.9;
 }
+
+
+
+/* ========================================
+   路线图 / 时间轴页面样式
+   ======================================== */
+
+/* 输入区域 */
+.timeline-input-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.timeline-input {
+  padding: 14px 18px;
+  background-color: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.timeline-input:first-child {
+  flex: 1;
+  min-width: 200px;
+}
+
+.timeline-date {
+  width: 180px;
+}
+
+.timeline-input:focus {
+  background-color: white;
+  border-color: #5dade2;
+}
+
+/* 时间轴容器 */
+.timeline-container {
+  position: relative;            /* 让子元素可以使用绝对定位 */
+  padding: 40px 20px 40px 60px;  /* 上右下左的内边距 */
+  margin-bottom: 40px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  min-height: 120px;
+  display: block;                 /* 默认隐藏，有数据时显示 */
+}
+
+
+.timeline-container.show {
+  display: block;
+}
+
+/* 时间轴起点 */
+.timeline-start {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  /* transform: translateY(-50%);  */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeline-start-dot {
+  width: 14px;
+  height: 14px;
+  background-color: #ec7063;     /* 红色，突出"今天" */
+  border: 2px solid white;       /* 白色边框 */
+  box-shadow: 0 2px 6px rgba(231, 76, 60, 0.3);  /* 阴影 */
+  border-radius: 50%;            /* 圆形 */
+  margin-top: -7px;              /* 向上偏移，对齐轨道中心 */
+}
+
+.timeline-start-label {
+  font-size: 11px;
+  color: #ec7063;                /* 红色 */
+  font-weight: 600;              /* 加粗 */
+  margin-top: 10px;              /* 与圆点拉开距离 */
+}
+
+/* 时间轴轨道（横线） */
+.timeline-track {
+  position: relative;
+  height: 4px;                   /* 轨道高度 */
+  background-color: #7b7b7b;     /* 轨道颜色 */
+  border-radius: 2px;
+  margin-top: 20px;
+}
+
+.today-marker {
+  display: none;  /* 隐藏 */
+}
+
+.milestone-node {
+  position: absolute;
+  /* 标记 */
+  top: -8px;                     /* 在轨道上方一点 */
+  transform: translateX(-50%);   /* 水平居中 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 5;
+}
+
+/* 节点圆点 */
+.milestone-dot {
+  width: 20px;
+  height: 20px;
+  background-color: #5dade2;     /* 主色调蓝色 */
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.milestone-node:hover .milestone-dot {
+  transform: scale(1.2);         /* 悬停时放大 */
+}
+
+/* 里程碑卡片列表 */
+.milestone-list {
+  display: grid;
+  gap: 12px;
+}
+
+/* 里程碑卡片 */
+.milestone-card {
+  background-color: white;
+  border: 1px solid #ecf0f1;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s;
+}
+
+.milestone-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* 已完成状态 */
+.milestone-card.completed {
+  background-color: #f0fff4;     /* 浅绿色背景 */
+  border-color: #c6f6d5;
+}
+
+/* 已取消状态 */
+.milestone-card.cancelled {
+  background-color: #f8f9fa;
+  opacity: 0.7;
+}
+
+/* 状态指示器（小圆点） */
+.milestone-status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #5dade2;
+  flex-shrink: 0;
+}
+
+
+.milestone-card.completed .milestone-status-indicator {
+    background-color: #58d68d;
+}
+
+.milestone-card.cancelled .milestone-status-indicator {
+    background-color: #95a5a6;
+}
+
+/* 里程碑信息 */
+.milestone-info {
+    flex: 1;
+}
+
+.milestone-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.milestone-card.cancelled .milestone-name {
+    text-decoration: line-through;
+    color: #95a5a6;
+}
+
+.milestone-date-display {
+    font-size: 13px;
+    color: #7f8c8d;
+}
+
+.milestone-days-left {
+    font-size: 14px;
+    color: #5dade2;
+    font-weight: 500;
+}
+
+.milestone-card.completed .milestone-days-left {
+    color: #58d68d;
+}
+
+/* 操作区域 */
+.milestone-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* 状态选择下拉框 */
+.status-select {
+  padding: 6px 12px;
+  border: 1px solid #ecf0f1;
+  border-radius: 4px;
+  font-size: 12px;
+  background-color: white;
+  color: #2c3e50;
+  cursor: pointer;
+}
+
+.status-select:focus {
+  outline: none;
+  border-color: #5dade2;
+}

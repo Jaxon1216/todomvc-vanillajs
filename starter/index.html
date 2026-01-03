@@ -106,7 +106,58 @@
           <p>📅 暂无倒数日</p>
           <p class="empty-hint">添加一个重要日期开始倒计时吧！</p>
         </div>
-
+      </section>
+      <section class="view" id="timeline-view">
+        <header class="view-header">
+            <h2>路线图 / 进度表</h2>
+            <p class="view-desc">规划阶段目标，可视化追踪学习进度</p>
+        </header>
+        
+        <!-- 新增目标输入区 -->
+        <div class="timeline-input-container">
+            <input 
+                type="text" 
+                id="milestone-name" 
+                class="timeline-input" 
+                placeholder="目标名称（如：学完计网）"
+                autocomplete="off"
+            >
+            <input 
+                type="date" 
+                id="milestone-date" 
+                class="timeline-input timeline-date"
+            >
+            <button id="add-milestone-btn" class="btn btn-primary">添加</button>
+        </div>
+        
+        <!-- 时间轴容器 -->
+        <div class="timeline-container" id="timeline-container">
+            <!-- 时间轴起点标记 -->
+            <div class="timeline-start">
+                <span class="timeline-start-dot"></span>
+                <span class="timeline-start-label">今天</span>
+            </div>
+            
+            <!-- 时间轴主体 -->
+            <div class="timeline-track" id="timeline-track">
+                <!-- 当天标记线 -->
+                <div class="today-marker" id="today-marker">
+                    <span class="today-label"></span>
+                </div>
+                <!-- 里程碑节点会通过 JS 动态添加到这里 -->
+            </div>
+        </div>
+        
+        <!-- 里程碑列表（卡片视图） -->
+        <div class="milestone-list" id="milestone-list">
+            <!-- 里程碑卡片会通过 JS 动态添加到这里 -->
+        </div>
+        
+        <!-- 空状态提示 -->
+        <div class="empty-state" id="timeline-empty">
+            <p>🗺️ 暂无学习目标</p>
+            <p class="empty-hint">添加你的第一个阶段性目标吧！</p>
+        </div>
       </section>
     </main>
    </div>
