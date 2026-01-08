@@ -733,13 +733,20 @@ function renderTimeline() {
     });
     
     // 添加里程碑节点
-    activeMilestones.forEach(function(milestone) {
+    activeMilestones.forEach(function(milestone, index) {
         const mDate = new Date(milestone.date);
         const position = ((mDate - minDate) / (maxDate - minDate)) * 100;
         
         // 创建节点元素
         const node = document.createElement('div');
         node.className = 'milestone-node';
+        
+        // 奇数和偶数交替显示在上方/下方，避免标签重叠
+        if (index % 2 === 0) {
+            node.classList.add('milestone-below'); // 偶数在下方（默认）
+        } else {
+            node.classList.add('milestone-above'); // 奇数在上方
+        }
         
         // 添加状态类
         if (milestone.status === 'completed') {
