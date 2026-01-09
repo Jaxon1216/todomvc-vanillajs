@@ -1,0 +1,1032 @@
+/* 
+  🎨 TodoMVC 样式文件
+  
+  跟着教程，在这里编写 CSS 样式
+  
+  提示：
+  - df + Tab = display: flex;
+  - m10 + Tab = margin: 10px;
+  - bgc#fff + Tab = background-color: #fff;
+*/
+/* 自定义 */
+:root {
+  /* 主色调 - 低饱和浅天蓝 */
+  --sidebar-bg: #e8f4fc;
+  --sidebar-hover: #d0e8f5;
+  --sidebar-active: #b8dced;
+  
+  /* 背景色 */
+  --main-bg: #ffffff;
+  --card-bg: #ffffff;
+  
+  /* 文字颜色 */
+  --text-primary: #2c3e50;
+  --text-secondary: #7f8c8d;
+  --text-light: #95a5a6;
+  
+  /* 功能色 */
+  --primary-color: #5dade2;
+  --primary-hover: #3498db;
+  --success-color: #58d68d;
+  --warning-color: #f4d03f;
+  --danger-color: #ec7063;
+  
+  /* 边框和阴影 */
+  --border-color: #ecf0f1;
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+  /* 尺寸 */
+  --sidebar-width: 240px;
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+}
+
+
+/* 基础样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+               "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* 整体布局 */
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* 侧边栏 */
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+.sidebar-header {
+  padding: 32px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.tagline {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.nav-menu {
+  flex: 1;
+  padding: 16px 12px;
+}
+
+.nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: 6px;
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  transition: background-color 0.2s;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background-color: var(--sidebar-hover);
+}
+
+.nav-item.active {
+  background-color: var(--sidebar-active);
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 18px;
+  margin-right: 12px;
+}
+
+.sidebar-footer {
+  padding: 20px 24px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+/* 主内容区 */
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 40px 48px;
+  background-color: var(--main-bg);
+}
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
+}
+
+
+/* main区域 */
+.view-header {
+  margin-bottom: 32px;
+}
+
+.view-header h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.view-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+/* 标记 */
+/* 通用按钮样式 */
+.btn {
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+/* 标记 */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+
+.btn-primary:hover {
+  background-color: #3498db;
+}
+
+.todo-input-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 14px 18px;
+  background-color: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.todo-input:focus {
+  background-color: white;
+  border-color: var(--primary-color);
+}
+
+.todo-input::placeholder {
+  color: #95a5a6;
+}
+
+/* 筛选按钮样式 */
+.todo-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background-color: #f8f9fa;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background-color: #ecf0f1;
+}
+
+.filter-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.todo-count {
+  margin-left: auto;
+  font-size: 13px;
+  color: #95a5a6;
+}
+
+/* ========================================
+   Todo 列表样式
+   ======================================== */
+.todo-list {
+  list-style: none; 
+  /* 标记 */
+  margin-bottom: 20px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: white;
+  border: 1px solid #ecf0f1;
+  border-radius: var(--border-radius);
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+
+.todo-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* 已完成状态 */
+.todo-item.completed {
+  background-color: #f8f9fa;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+/* 标记 */
+  color: #95a5a6;
+}
+
+/* 复选框样式 */
+.todo-checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ecf0f1;
+  border-radius: 50%;
+  margin-right: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.todo-checkbox:hover {
+  border-color: var(--primary-color);
+}
+
+.todo-item.completed .todo-checkbox {
+  background-color: #58d68d;
+  border-color: #58d68d;
+}
+
+.todo-item.completed .todo-checkbox::after {
+  content: "✓";
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+/* 标记 */
+
+
+/* Todo 文本 */
+.todo-text {
+  flex: 1;
+  font-size: 15px;
+  word-break: break-word;
+}
+/* 标记 */
+
+
+/* 删除按钮 */
+.todo-delete {
+  padding: 6px 12px;
+  font-size: 12px;
+  background-color: #ec7063;
+  color: white;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.todo-delete:hover {
+  opacity: 0.9;
+}
+
+/* ========================================
+   空状态提示样式，标记
+   ======================================== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  display: none;
+}
+
+.empty-state.show {
+    display: block;
+}
+
+.empty-state p:first-child {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.empty-hint {
+    font-size: 14px;
+    color: #95a5a6;
+}
+
+/* ========================================
+   倒数日页面样式
+   ======================================== */
+
+/* 输入区域 */
+
+.countdown-input-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.countdown-input {
+  padding: 14px 18px;
+  background-color: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+
+.countdown-input:first-child {
+  flex: 1;
+  min-width: 200px;
+}
+
+.countdown-date {
+  width: 180px;
+}
+
+.countdown-input:focus {
+  background-color: white;
+  border-color: #5dade2;
+}
+
+/* 倒数日列表 */
+.countdown-list {
+  display: grid;
+  gap: 16px;
+}
+/* grid布局，标记 */
+
+/* 倒数日卡片 */
+.countdown-card {
+  background-color: white;
+  border: 1px solid #ecf0f1;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s;
+}
+
+
+.countdown-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.countdown-info {
+  flex: 1;
+}
+
+.countdown-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 6px;
+}
+
+.countdown-date-display {
+  font-size: 13px;
+  color: #7f8c8d;
+}
+
+.countdown-days {
+  text-align: center;
+  padding: 0 24px;
+}
+
+.countdown-number {
+  font-size: 42px;
+  font-weight: 700;
+  color: #5dade2;
+  line-height: 1;
+}
+
+.countdown-label {
+  font-size: 13px;
+  color: #7f8c8d;
+  margin-top: 4px;
+}
+
+/* 已过期状态 */
+.countdown-card.past .countdown-number {
+  color: #95a5a6;
+}
+
+/* 今天状态 */
+.countdown-card.today .countdown-number {
+  color: #58d68d;
+}
+
+/* 操作按钮 */
+.countdown-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-danger {
+  background-color: #ec7063;
+  color: white;
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+}
+
+
+
+/* ========================================
+   路线图 / 时间轴页面样式
+   ======================================== */
+
+/* 输入区域 */
+.timeline-input-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.timeline-input {
+  padding: 14px 18px;
+  background-color: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.timeline-input:first-child {
+  flex: 1;
+  min-width: 200px;
+}
+
+.timeline-date {
+  width: 180px;
+}
+
+.timeline-input:focus {
+  background-color: white;
+  border-color: #5dade2;
+}
+
+/* 时间轴容器 */
+.timeline-container {
+  position: relative;            /* 让子元素可以使用绝对定位 */
+  padding: 55px 20px 40px 60px;  /* 上右下左的内边距，相应减小以配合紧凑的标签布局 */
+  margin-bottom: 40px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  min-height: 130px;             /* 相应减小高度 */
+  display: block;                /* 默认隐藏，有数据时显示 */
+}
+
+
+.timeline-container.show {
+  display: block;
+}
+
+/* 时间轴起点 */
+.timeline-start {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  /* transform: translateY(-50%);  */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;  /* 确保"今天"标记在最上层，不被遮挡 */
+}
+
+.timeline-start-dot {
+  width: 14px;
+  height: 14px;
+  background-color: #ec7063;     /* 红色，突出"今天" */
+  border: 2px solid white;       /* 白色边框 */
+  box-shadow: 0 2px 6px rgba(231, 76, 60, 0.3);  /* 阴影 */
+  border-radius: 50%;            /* 圆形 */
+  margin-top: -7px;              /* 向上偏移，对齐轨道中心 */
+}
+
+.timeline-start-label {
+  font-size: 11px;
+  color: #ec7063;                /* 红色 */
+  font-weight: 600;              /* 加粗 */
+  margin-top: 10px;              /* 与圆点拉开距离 */
+  background-color: rgba(255, 255, 255, 0.95);  /* 白色背景，确保清晰可见 */
+  padding: 2px 6px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 时间轴轨道（横线） */
+.timeline-track {
+  position: relative;
+  height: 4px;                   /* 轨道高度 */
+  background-color: #7b7b7b;     /* 轨道颜色 */
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+.today-marker {
+  display: none;  /* 隐藏 */
+}
+
+.milestone-node {
+  position: absolute;
+  /* 标记 */
+  top: -8px;                     /* 在轨道上方一点 */
+  transform: translateX(-50%);   /* 水平居中 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 5;
+}
+
+/* 节点圆点 */
+.milestone-dot {
+  width: 20px;
+  height: 20px;
+  background-color: #5dade2;     /* 主色调蓝色 */
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.milestone-node:hover .milestone-dot {
+  transform: scale(1.2);         /* 悬停时放大 */
+}
+
+/* 已完成状态 */
+.milestone-node.completed .milestone-dot {
+  background-color: #58d68d;     /* 绿色 */
+}
+
+/* 已取消状态 */
+.milestone-node.cancelled .milestone-dot {
+  background-color: #95a5a6;     /* 灰色 */
+}
+
+/* 节点标签 */
+.milestone-node-label {
+  font-size: 11px;
+  color: #7f8c8d;
+  margin-top: 12px;
+  white-space: nowrap;
+  max-width: 70px;               /* 减小宽度，避免横向重叠 */
+  overflow: hidden;
+  text-overflow: ellipsis;       /* 文字过长显示省略号 */
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.9);  /* 半透明背景，避免重叠时难看 */
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: all 0.2s;
+  cursor: help;
+}
+
+/* 悬停时显示完整标签 */
+.milestone-node-label:hover {
+  max-width: 200px;              /* 悬停时可以显示更长的文字 */
+  background-color: rgba(44, 62, 80, 0.95);
+  color: white;
+  z-index: 100;
+  padding: 4px 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 奇数节点：标签在圆点上方（避免与下方节点重叠） */
+.milestone-node.milestone-above {
+  flex-direction: column-reverse;  /* 标签在上，圆点在下 */
+  top: -43px;  /* 向上偏移更多，给标签和下方节点留出足够间距 */
+}
+
+.milestone-node.milestone-above .milestone-node-label {
+  margin-top: 0;
+  margin-bottom: 12px;  /* 标签与圆点的间距 */
+}
+
+/* 偶数节点：标签在圆点下方（默认） */
+.milestone-node.milestone-below {
+  top: -8px;  /* 默认位置 */
+}
+
+/* 里程碑卡片列表 */
+.milestone-list {
+  display: grid;
+  gap: 12px;
+}
+
+/* 里程碑卡片 */
+.milestone-card {
+  background-color: white;
+  border: 1px solid #ecf0f1;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s;
+}
+
+.milestone-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* 已完成状态 */
+.milestone-card.completed {
+  background-color: #f0fff4;     /* 浅绿色背景 */
+  border-color: #c6f6d5;
+}
+
+/* 已取消状态 */
+.milestone-card.cancelled {
+  background-color: #f8f9fa;
+  opacity: 0.7;
+}
+
+/* 状态指示器（小圆点） */
+.milestone-status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #5dade2;
+  flex-shrink: 0;
+}
+
+
+.milestone-card.completed .milestone-status-indicator {
+    background-color: #58d68d;
+}
+
+.milestone-card.cancelled .milestone-status-indicator {
+    background-color: #95a5a6;
+}
+
+/* 里程碑信息 */
+.milestone-info {
+    flex: 1;
+}
+
+.milestone-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.milestone-card.cancelled .milestone-name {
+    text-decoration: line-through;
+    color: #95a5a6;
+}
+
+.milestone-date-display {
+    font-size: 13px;
+    color: #7f8c8d;
+}
+
+.milestone-days-left {
+    font-size: 14px;
+    color: #5dade2;
+    font-weight: 500;
+}
+
+.milestone-card.completed .milestone-days-left {
+    color: #58d68d;
+}
+
+/* 操作区域 */
+.milestone-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* 状态选择下拉框 */
+.status-select {
+  padding: 6px 12px;
+  border: 1px solid #ecf0f1;
+  border-radius: 4px;
+  font-size: 12px;
+  background-color: white;
+  color: #2c3e50;
+  cursor: pointer;
+}
+
+.status-select:focus {
+  outline: none;
+  border-color: #5dade2;
+}
+
+/* ========================================
+   响应式布局
+   ======================================== */
+
+/* 平板（768px以下）：侧边栏收窄 */
+@media (max-width: 768px) {
+  /* 调整侧边栏宽度变量 */
+  :root {
+    --sidebar-width: 60px;
+  }
+  
+  /* 侧边栏宽度 */
+  .sidebar {
+    width: var(--sidebar-width);
+  }
+  
+  /* 侧边栏header缩小 */
+  .sidebar-header {
+    padding: 20px 8px;
+  }
+  
+  /* Logo只显示emoji */
+  .logo {
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  /* 隐藏副标题 */
+  .tagline {
+    display: none;
+  }
+  
+  /* 导航按钮纵向排列，图标和文字上下排列 */
+  .nav-item {
+    flex-direction: column;
+    padding: 12px 8px;
+    font-size: 20px;
+  }
+  
+  /* 图标不需要右边距 */
+  .nav-icon {
+    margin-right: 0;
+  }
+  
+  /* 文字变小 */
+  .nav-text {
+    font-size: 10px;
+    margin-top: 4px;
+  }
+  
+  /* 隐藏底部 */
+  .sidebar-footer {
+    display: none;
+  }
+  
+  /* 主内容区左边距调整 */
+  .main-content {
+    margin-left: var(--sidebar-width);
+    padding: 24px 16px;
+  }
+  
+  /* 标题字号缩小 */
+  .view-header h2 {
+    font-size: 24px;
+  }
+}
+
+/* 手机（480px以下）：侧边栏变顶部导航 */
+@media (max-width: 480px) {
+  /* 侧边栏宽度设为0 */
+  :root {
+    --sidebar-width: 0px;
+  }
+  
+  /* 容器改为纵向布局 */
+  .app-container {
+    flex-direction: column;
+  }
+  
+  /* 侧边栏变横向导航 */
+  .sidebar {
+    width: 100%;              /* 全宽 */
+    height: auto;             /* 高度自适应 */
+    position: relative;       /* 不再固定定位 */
+    flex-direction: row;      /* 横向排列 */
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  /* Logo区域 */
+  .sidebar-header {
+    padding: 0 16px;
+    border: none;
+  }
+  
+  .logo {
+    font-size: 20px;
+  }
+  
+  /* 导航横向排列 */
+  .nav-menu {
+    display: flex;
+    flex-direction: row;      /* 横向 */
+    gap: 8px;
+    flex: 1;                  /* 占据剩余空间 */
+    justify-content: center;  /* 居中对齐 */
+  }
+  
+  /* 导航按钮 */
+  .nav-item {
+    padding: 8px 12px;
+    margin: 0;
+    border-radius: 20px;      /* 圆角胶囊形状 */
+  }
+  
+  /* 隐藏文字，只显示图标 */
+  .nav-text {
+    display: none;
+  }
+  
+  /* 图标大小 */
+  .nav-icon {
+    font-size: 20px;
+  }
+  
+  /* 主内容区 */
+  .main-content {
+    margin-left: 0;           /* 不需要左边距了 */
+    padding: 20px 16px;
+  }
+  
+  /* 标题进一步缩小 */
+  .view-header h2 {
+    font-size: 22px;
+  }
+  
+  /* 描述文字缩小 */
+  .view-desc {
+    font-size: 13px;
+  }
+  
+  /* 输入框容器改为纵向 */
+  .todo-input-container,
+  .countdown-input-container,
+  .timeline-input-container {
+    flex-direction: column;
+  }
+  
+  /* 输入框全宽 */
+  .todo-input,
+  .countdown-input,
+  .timeline-input {
+    width: 100% !important;
+    min-width: 0;
+  }
+  
+  /* 日期输入框全宽 */
+  .countdown-date,
+  .timeline-date {
+    width: 100%;
+  }
+  
+  /* 卡片内容换行 */
+  .todo-item,
+  .countdown-card,
+  .milestone-card {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  /* 倒数日卡片的数字区域 */
+  .countdown-days {
+    padding: 0 16px;
+  }
+  
+  .countdown-number {
+    font-size: 32px;
+  }
+  
+  /* 时间轴改为横向滚动 */
+  .timeline-container {
+    overflow-x: auto;           /* 允许横向滚动 */
+    overflow-y: hidden;
+    padding: 45px 10px 25px 10px;  /* 相应减小边距，与桌面端调整保持一致 */
+    min-height: 120px;          /* 相应减小高度 */
+    -webkit-overflow-scrolling: touch;  /* iOS 平滑滚动 */
+  }
+  
+  /* 时间轴轨道设置最小宽度 */
+  .timeline-track {
+    min-width: 600px;           /* 确保有足够宽度展示 */
+  }
+  
+  /* 起点标记在手机上隐藏（节省空间） */
+  .timeline-start {
+    display: none;
+  }
+  
+  /* 里程碑节点在小屏幕调整 */
+  .milestone-node {
+    transform: translateX(-50%) scale(0.9);  /* 稍微缩小 */
+  }
+  
+  .milestone-node-label {
+    font-size: 10px;            /* 字号缩小 */
+    max-width: 50px;            /* 标签宽度限制，手机上更窄 */
+  }
+  
+  /* 手机上也需要调整上方标签的偏移（与桌面端 -43px 保持一致比例） */
+  .milestone-node.milestone-above {
+    top: -40px;  /* 相应减小，与桌面端比例一致 */
+  }
+  
+  .milestone-dot {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+  }
+  
+  /* 里程碑操作按钮 */
+  .milestone-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* 极小屏幕（360px以下）：进一步优化 */
+@media (max-width: 360px) {
+  /* 主内容区进一步减小边距 */
+  .main-content {
+    padding: 16px 12px;
+  }
+  
+  /* 标题再缩小 */
+  .view-header h2 {
+    font-size: 20px;
+  }
+  
+  /* 按钮缩小 */
+  .btn {
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+  
+  /* 倒数日卡片改为纵向 */
+  .countdown-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .countdown-days {
+    padding: 16px 0;
+  }
+}

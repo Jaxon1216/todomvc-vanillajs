@@ -161,11 +161,11 @@
 /* 时间轴容器 */
 .timeline-container {
     position: relative;            /* 让子元素可以使用绝对定位 */
-    padding: 40px 20px 40px 60px;  /* 上右下左的内边距 */
+    padding: 55px 20px 40px 60px;  /* 上右下左的内边距，增加上边距给上方标签留空间 */
     margin-bottom: 40px;
     background-color: #f8f9fa;
     border-radius: 8px;
-    min-height: 120px;
+    min-height: 130px;             /* 增加最小高度，确保上下标签都不被裁剪 */
     display: none;                 /* 默认隐藏，有数据时显示 */
 }
 
@@ -189,6 +189,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 10;                   /* 确保"今天"标记在最上层，不被遮挡 */
 }
 
 .timeline-start-dot {
@@ -206,6 +207,10 @@
     color: #ec7063;                /* 红色 */
     font-weight: 600;              /* 加粗 */
     margin-top: 10px;              /* 与圆点拉开距离 */
+    background-color: rgba(255, 255, 255, 0.95);  /* 白色背景，确保清晰可见 */
+    padding: 2px 6px;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 ```
 
@@ -221,9 +226,9 @@
 .timeline-track {
     position: relative;
     height: 4px;                   /* 轨道高度 */
-    background-color: #ecf0f1;     /* 轨道颜色 */
+    background-color: #7b7b7b;     /* 轨道颜色 */
     border-radius: 2px;
-    margin-top: 20px;
+    margin-top: 8px;               /* 减小上边距，让布局更紧凑 */
 }
 ```
 
@@ -288,14 +293,65 @@
 .milestone-node-label {
     font-size: 11px;
     color: #7f8c8d;
-    margin-top: 8px;
+    margin-top: 12px;
     white-space: nowrap;
-    max-width: 80px;
+    max-width: 70px;               /* 减小宽度，避免横向重叠 */
     overflow: hidden;
     text-overflow: ellipsis;       /* 文字过长显示省略号 */
     text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);  /* 半透明背景，避免重叠时难看 */
+    padding: 2px 4px;
+    border-radius: 3px;
+    transition: all 0.2s;
+    cursor: help;
+}
+
+/* 悬停时显示完整标签 */
+.milestone-node-label:hover {
+    max-width: 200px;              /* 悬停时可以显示更长的文字 */
+    background-color: rgba(44, 62, 80, 0.95);
+    color: white;
+    z-index: 100;
+    padding: 4px 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 奇数节点：标签在圆点上方（避免与下方节点重叠） */
+.milestone-node.milestone-above {
+    flex-direction: column-reverse;  /* 标签在上，圆点在下 */
+    top: -43px;  /* 向上偏移更多，给标签和下方节点留出足够间距 */
+}
+
+.milestone-node.milestone-above .milestone-node-label {
+    margin-top: 0;
+    margin-bottom: 12px;  /* 标签与圆点的间距 */
+}
+
+/* 偶数节点：标签在圆点下方（默认） */
+.milestone-node.milestone-below {
+    top: -8px;  /* 默认位置 */
 }
 ```
+
+> 💡 **为什么要交错显示？**
+> 
+> 当添加多个相近日期的事件时，如果所有标签都在下方，会发生重叠：
+> 
+> ```
+> 今天  圆点1   圆点2   圆点3
+>       标签1   标签2   标签3  ← 全部在下方会重叠！
+> ```
+> 
+> 采用交错显示后：
+> 
+> ```
+>         标签2 ↑
+>          圆点2
+> 今天  圆点1       圆点3
+>       标签1 ↓     标签3 ↓
+> ```
+> 
+> 这样即使日期很接近，标签也不会重叠，同时还能保持视觉上的清晰。
 
 ### 2.6 里程碑卡片样式
 
@@ -586,13 +642,21 @@ function renderTimeline() {
     });
     
     // 添加里程碑节点
-    activeMilestones.forEach(function(milestone) {
+    activeMilestones.forEach(function(milestone, index) {
         const mDate = new Date(milestone.date);
         const position = ((mDate - minDate) / (maxDate - minDate)) * 100;
         
         // 创建节点元素
         const node = document.createElement('div');
         node.className = 'milestone-node';
+        
+        // 奇数和偶数交替显示在上方/下方，避免标签重叠
+        // 这是为了解决相近日期的事件标签会重叠的问题
+        if (index % 2 === 0) {
+            node.classList.add('milestone-below'); // 偶数在下方（默认）
+        } else {
+            node.classList.add('milestone-above'); // 奇数在上方
+        }
         
         // 添加状态类
         if (milestone.status === 'completed') {
